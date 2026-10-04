@@ -5,7 +5,7 @@ Open source (MIT) personal chef + coach agent. Hackathon project by Bianca and M
 ## Stack
 - TanStack Start (React, TypeScript), Tailwind
 - Mastra agent, Claude via Neon AI Gateway
-- Neon Postgres + Neon Auth
+- Neon Postgres, Better Auth (Google sign-in)
 - assistant-ui (chat), React Three Fiber (Watts, the 3D character)
 - Spoonacular (recipes), Whoop API (recovery/strain)
 - Deployed to Fly.io (Dockerfile in repo root)
@@ -38,21 +38,20 @@ Open source (MIT) personal chef + coach agent. Hackathon project by Bianca and M
    ```
 3. Stats card: `await getRecoverySummary()` from `src/server/recovery.ts` (no args) returns
    `{ connected: boolean; recoveryScore: number | null; dayStrain: number | null }`. Never throws.
+4. Chat UI → Watts via `runtime.thread.append`: photo as `{ type: "image", image: dataUrl }` (~1024px JPEG), then
+   `"Energy: N/10"` (+ `" Craving: x"`); cards from `findRecipes` tool output; cook = `"Let's cook <title> (recipe <id>)"`.
 
 ## Rules
 - Every table has `user_id` = the signed-in user's id (uuid, Better Auth + Google). Server: `requireUserId(headers)` (`src/server/auth.ts`); tools: `userIdFrom(context)`. `/api/chat` and server fns reject signed-out requests.
 - DB access: `getSql()` from `src/db/client.ts` (Neon serverless driver), server code only.
-- The browser never calls outside services. All API calls (Claude, Spoonacular,
-  Whoop, Exa, Neon) go through server functions. Keys stay server-side; only
-  `VITE_`-prefixed vars reach the client, so never put a secret in one.
+- The browser never calls outside services (Claude, Spoonacular, Whoop, Exa, Neon): server code only. Keys stay server-side; never put a secret in a `VITE_` var.
 - Env vars: see `.env.example`. Local values go in `.env.local`. Spoonacular is 50 points/day:
   use `FAKE_SPOONACULAR=1` in dev. Only store recipe id, title, image URL (their terms).
 
 ## Git
 - `main` is the base. All changes go through branches + PRs; no direct commits to main.
 - Branches: `bianca/<thing>` or `michael/<thing>`. Use `git switch` (`git switch -c bianca/foo`).
-- Small PRs, small commits.
-- Never commit `.env.local` or any secrets.
+- Small PRs, small commits. Never commit `.env.local` or any secrets.
 
 ## Working style
 - Plan before big changes; share the plan before writing code.
