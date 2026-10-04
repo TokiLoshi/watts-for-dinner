@@ -92,6 +92,22 @@ export function RecipeCard({
             </span>
           )}
         </div>
+        {!!recipe.usedIngredients?.length && (
+          <p className="text-xs text-teal-world/70">Uses: {recipe.usedIngredients.join(', ')}</p>
+        )}
+        {!!recipe.missingIngredients?.length && (
+          <p className="text-xs text-teal-world/70">Need: {recipe.missingIngredients.join(', ')}</p>
+        )}
+        {recipe.sourceUrl && (
+          <a
+            href={recipe.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="w-fit text-xs text-teal-world/60 underline underline-offset-2"
+          >
+            {recipe.sourceName || 'Source'}
+          </a>
+        )}
       </div>
       <button
         type="button"

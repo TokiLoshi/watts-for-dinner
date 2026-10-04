@@ -6,6 +6,10 @@ type RecipeOption = {
   title: string
   readyInMinutes: number
   image: string | null
+  sourceUrl?: string | null
+  sourceName?: string | null
+  usedIngredients?: string[]
+  missingIngredients?: string[]
 }
 
 type MessagePart =
@@ -40,5 +44,9 @@ export function recipeCardsFor(message: {
     title: r.title,
     cookMinutes: r.readyInMinutes,
     image: r.image,
+    sourceUrl: r.sourceUrl,
+    sourceName: r.sourceName,
+    usedIngredients: r.usedIngredients,
+    missingIngredients: r.missingIngredients,
   }))
 }

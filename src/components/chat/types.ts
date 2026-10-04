@@ -9,6 +9,12 @@ export type Recipe = {
   energy?: number
   /** Path under public/ or a Spoonacular image URL; null when there's no photo. */
   image: string | null
+  sourceUrl?: string | null
+  sourceName?: string | null
+  /** Ingredient names from the fridge this recipe uses. */
+  usedIngredients?: string[]
+  /** Ingredient names the user still needs to buy. */
+  missingIngredients?: string[]
 }
 
 export type Message =

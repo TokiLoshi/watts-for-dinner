@@ -18,7 +18,7 @@ export function ShowMoreButton({ onSend }: { onSend: (text: string) => void }) {
     <button
       type="button"
       onClick={() => onSend(SHOW_MORE_MESSAGE)}
-      className="h-12 w-full rounded-full border-2 border-lime text-base font-medium text-cream transition active:scale-[0.98]"
+      className="min-h-12 w-full rounded-full border-2 border-lime text-base font-medium text-cream transition active:scale-[0.98]"
     >
       Show me 3 more
     </button>
@@ -35,7 +35,7 @@ export function QuickReplyChips({ onSend }: { onSend: (text: string) => void }) 
         <button
           key={chip}
           type="button"
-          onClick={() => onSend(chip)}
+          onClick={() => onSend(`Craving: ${chip.toLowerCase()}`)}
           className="rounded-full border border-lime/50 bg-card/80 px-4 py-2 text-sm text-cream backdrop-blur-xl transition active:scale-[0.97]"
         >
           {chip}

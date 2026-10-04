@@ -67,14 +67,14 @@ export function ChatFlow({
   }
 
   function handleEnergy(energy: number) {
-    runtime.thread.append(`My energy is ${energy}/10`)
+    runtime.thread.append(`Energy: ${energy}/10`)
     setStep('chat')
     setShowChips(true)
   }
 
   // Typed messages and "Cook this" go to Bianca's streaming agent.
   function handleCook(recipe: Recipe) {
-    handleText(`Let’s cook ${recipe.title}`)
+    handleText(`Let's cook ${recipe.title} (recipe ${recipe.id})`)
   }
 
   function handleText(text: string) {
