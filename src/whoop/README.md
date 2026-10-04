@@ -36,6 +36,8 @@ const cycle = await whoop.getLatestCycle();       // score.strain
 const sleep = await whoop.getLatestSleep();       // latest non-nap sleep
 ```
 
+To disconnect, `await whoop.revokeAccess()` (DELETE /v2/user/access), then delete your stored tokens.
+
 The client refreshes the access token when it is about to expire, or once on a 401.
 Score fields are only present when `score_state === "SCORED"`.
 

@@ -36,14 +36,14 @@ export function createWhoopClient(opts: WhoopClientOptions) {
 		return refreshing;
 	}
 
-	async function get<T>(path: string, params: Record<string, string> = {}): Promise<T> {
+	async function request(method: "GET" | "DELETE", path: string, params: Record<string, string> = {}): Promise<Response> {
 		if (refreshing) await refreshing;
 		if (Date.now() >= tokens.expiresAt - EXPIRY_SKEW_MS) await refresh();
 
 		const url = new URL(WHOOP_API_BASE + path);
 		for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
 
-		const send = (accessToken: string) => fetch(url, { headers: { authorization: `Bearer ${accessToken}` } });
+		const send = (accessToken: string) => fetch(url, { method, headers: { authorization: `Bearer ${accessToken}` } });
 		const used = tokens.accessToken;
 		let res = await send(used);
 		if (res.status === 401 && tokens.refreshToken) {
@@ -51,8 +51,12 @@ export function createWhoopClient(opts: WhoopClientOptions) {
 			if (tokens.accessToken === used) await refresh();
 			res = await send(tokens.accessToken);
 		}
-		if (!res.ok) throw new WhoopError(`WHOOP GET ${path} failed (${res.status})`, res.status);
-		return (await res.json()) as T;
+		if (!res.ok) throw new WhoopError(`WHOOP ${method} ${path} failed (${res.status})`, res.status);
+		return res;
+	}
+
+	async function get<T>(path: string, params: Record<string, string> = {}): Promise<T> {
+		return (await (await request("GET", path, params)).json()) as T;
 	}
 
 	return {
@@ -70,6 +74,10 @@ export function createWhoopClient(opts: WhoopClientOptions) {
 		async getLatestSleep(): Promise<Sleep | null> {
 			const { records } = await get<Collection<Sleep>>("/v2/activity/sleep", { limit: "10" });
 			return records.find((s) => !s.nap) ?? null;
+		},
+		/** Revokes this app's access for the user (DELETE /v2/user/access). Tokens stop working. */
+		async revokeAccess(): Promise<void> {
+			await request("DELETE", "/v2/user/access");
 		},
 		/** Current token set (after any refresh). */
 		getTokens: () => tokens,
