@@ -7,6 +7,7 @@ import { AgentMessages } from './AgentMessages'
 import { ChatMessage } from './ChatMessage'
 import { EnergySlider } from './EnergySlider'
 import { toPhotoDataUrl } from './photo'
+import { QuickReplyChips, ShowMoreButton } from './QuickReplies'
 import type { Message, Recipe, WattsMood } from './types'
 
 /** fridge: waiting for a photo · reading: Watts is listing ingredients · energy: slider · chat: free chat */
@@ -35,6 +36,8 @@ export function ChatFlow({
   const runtime = useChatRuntime()
   const [messages, setMessages] = useState<Message[]>([FRIDGE_QUESTION])
   const [step, setStep] = useState<Step>('fridge')
+  // Quick-reply chips go under Watts's first reply after the energy score, until the user sends something.
+  const [showChips, setShowChips] = useState(false)
   const endRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -46,6 +49,7 @@ export function ChatFlow({
   }
 
   async function handlePhoto(file: File) {
+    setShowChips(false)
     const image = await toPhotoDataUrl(file)
     runtime.thread.append({
       role: 'user',
@@ -65,14 +69,16 @@ export function ChatFlow({
   function handleEnergy(energy: number) {
     runtime.thread.append(`My energy is ${energy}/10`)
     setStep('chat')
+    setShowChips(true)
   }
 
   // Typed messages and "Cook this" go to Bianca's streaming agent.
   function handleCook(recipe: Recipe) {
-    runtime.thread.append(`Let’s cook ${recipe.title}`)
+    handleText(`Let’s cook ${recipe.title}`)
   }
 
   function handleText(text: string) {
+    setShowChips(false)
     runtime.thread.append(text)
   }
 
@@ -89,6 +95,9 @@ export function ChatFlow({
           ))}
 
           <AgentMessages />
+
+          {step === 'chat' && <ShowMoreButton onSend={handleText} />}
+          {showChips && <QuickReplyChips onSend={handleText} />}
 
           {step === 'fridge' && (
             <button
