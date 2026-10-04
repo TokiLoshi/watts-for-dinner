@@ -6,6 +6,7 @@ import { getRecentMeals } from "./tools/get-recent-meals";
 import { getRecovery } from "./tools/get-recovery";
 import { getShoppingList } from "./tools/get-shopping-list";
 import { logMeal } from "./tools/log-meal";
+import { rateMeal } from "./tools/rate-meal";
 
 // Claude via Neon AI Gateway. Mastra reads NEON_AI_GATEWAY_BASE_URL and
 // NEON_AI_GATEWAY_TOKEN from the environment for "neon/" models.
@@ -16,6 +17,15 @@ Help the user decide what to cook for dinner. Keep replies short and friendly.
 
 At the start of a conversation, call getProfile, getRecovery and getRecentMeals.
 Respect their dietary preferences and goal, and lean on their favourite meals for ideas.
+
+Keeper ratings:
+- If getRecentMeals returns askAbout, open with exactly one question before anything else:
+  "How was the <title>? Keeper or not?" Save their answer with rateMeal (keeper true/false),
+  then carry on. If they skip it or change the subject, drop it: don't ask again.
+- They can rate anytime. If they comment on a recent meal ("that curry was amazing", "the tacos
+  were meh"), match it to the meal from getRecentMeals and call rateMeal.
+- Keepers are good signals: lean toward similar styles, cuisines or ingredients (not the exact
+  same dish two nights running). Avoid anything similar to a non-keeper.
 
 Match the recipe's effort to their recovery (and what they tell you about their energy):
 - Low recovery (under ~34%) or low energy: minimal effort, maxReadyTime 20.
@@ -46,5 +56,5 @@ export const watts = new Agent({
 	name: "Watts",
 	instructions,
 	model: WATTS_MODEL,
-	tools: { getProfile, getRecovery, getRecentMeals, findRecipes, getShoppingList, logMeal },
+	tools: { getProfile, getRecovery, getRecentMeals, findRecipes, getShoppingList, logMeal, rateMeal },
 });
