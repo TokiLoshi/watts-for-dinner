@@ -2,6 +2,7 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 
 import { getWhoopClientForUser } from "../../server/whoop";
+import { userIdFrom } from "./user";
 
 const round1 = (n: number) => Math.round(n * 10) / 10;
 
@@ -10,8 +11,8 @@ export const getRecovery = createTool({
 	description:
 		"Get the user's latest WHOOP recovery score, HRV, resting heart rate, today's strain and last night's sleep. Returns connected: false if they haven't connected WHOOP.",
 	inputSchema: z.object({}),
-	execute: async () => {
-		const whoop = await getWhoopClientForUser();
+	execute: async (_input, context) => {
+		const whoop = await getWhoopClientForUser(userIdFrom(context));
 		if (!whoop) return { connected: false as const };
 
 		try {

@@ -1,7 +1,7 @@
 import { randomBytes, timingSafeEqual } from "node:crypto";
 
 import { getSql } from "../db/client";
-import { DEMO_USER_ID } from "../db/demo-user";
+import { getUserId } from "./auth";
 import {
 	buildAuthorizeUrl,
 	createWhoopClient,
@@ -56,7 +56,10 @@ function stateCookie(request: Request, value: string, maxAge: number) {
 }
 
 /** GET /api/whoop/connect: redirect to WHOOP's consent screen. */
-export function startWhoopConnect(request: Request) {
+export async function startWhoopConnect(request: Request) {
+	if (!(await getUserId(request.headers))) {
+		return new Response(null, { status: 302, headers: { location: "/sign-in" } });
+	}
 	const state = randomBytes(32).toString("base64url");
 	const location = buildAuthorizeUrl({
 		clientId: credentials().clientId,
@@ -91,9 +94,12 @@ export async function finishWhoopConnect(request: Request) {
 		return fail("WHOOP connection failed: invalid or expired state. Please try again.");
 	}
 
+	const userId = await getUserId(request.headers);
+	if (!userId) return fail("Please sign in before connecting WHOOP.", 401);
+
 	try {
 		const tokens = await exchangeCode({ ...credentials(), code, redirectUri: redirectUri(request) });
-		await saveTokens(DEMO_USER_ID, tokens);
+		await saveTokens(userId, tokens);
 	} catch (error) {
 		console.error("[whoop] callback failed", error);
 		return fail("WHOOP connection failed. Please try again.", 502);
@@ -119,7 +125,7 @@ async function saveTokens(userId: string, t: TokenSet) {
 }
 
 /** A WHOOP client for the user, or null if they haven't connected. Persists refreshed tokens. */
-export async function getWhoopClientForUser(userId = DEMO_USER_ID) {
+export async function getWhoopClientForUser(userId: string) {
 	const rows = (await getSql()`
 		SELECT access_token, refresh_token, expires_at, scope FROM whoop_connections WHERE user_id = ${userId}
 	`) as { access_token: string; refresh_token: string | null; expires_at: Date; scope: string }[];

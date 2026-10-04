@@ -2,6 +2,7 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 
 import { rateMeal as saveRating } from "../../server/meals";
+import { userIdFrom } from "./user";
 
 export const rateMeal = createTool({
 	id: "rateMeal",
@@ -11,8 +12,8 @@ export const rateMeal = createTool({
 		mealId: z.string().uuid(),
 		keeper: z.boolean(),
 	}),
-	execute: async ({ mealId, keeper }) => {
-		const saved = await saveRating(mealId, keeper);
+	execute: async ({ mealId, keeper }, context) => {
+		const saved = await saveRating(userIdFrom(context), mealId, keeper);
 		return saved ? { saved: true as const, keeper: saved.keeper } : { saved: false as const, error: "Meal not found" };
 	},
 });
