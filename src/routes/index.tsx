@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { StatsCard } from '#/components/StatsCard'
-import { WattsChat } from '#/components/WattsChat'
+import { ChatFlow } from '#/components/chat/ChatFlow'
 
 export const Route = createFileRoute('/')({ component: Home })
 
@@ -14,11 +14,11 @@ function Home() {
       </header>
 
       <section className="relative basis-2/3 overflow-hidden">
-        {/* Watts 3D scene goes here (michael/watts-scene). */}
+        {/* Watts 3D scene goes here (michael/watts-scene); it'll take ChatFlow's mood. */}
         <div className="absolute inset-0 bg-radial from-card/60 to-transparent" />
 
         <div className="absolute inset-0">
-          <WattsChat />
+          <ChatFlow />
         </div>
       </section>
     </main>
