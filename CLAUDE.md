@@ -40,7 +40,7 @@ Open source (MIT) personal chef + coach agent. Hackathon project by Bianca and M
    `{ connected: boolean; recoveryScore: number | null; dayStrain: number | null }`. Never throws.
 
 ## Rules
-- Every table has a `user_id` column. Until auth lands, use `DEMO_USER_ID` from `src/db/demo-user.ts`.
+- Every table has `user_id` = the signed-in user's id (uuid, Better Auth + Google). Server: `requireUserId(headers)` (`src/server/auth.ts`); tools: `userIdFrom(context)`. `/api/chat` and server fns reject signed-out requests.
 - DB access: `getSql()` from `src/db/client.ts` (Neon serverless driver), server code only.
 - The browser never calls outside services. All API calls (Claude, Spoonacular,
   Whoop, Exa, Neon) go through server functions. Keys stay server-side; only

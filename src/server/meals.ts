@@ -1,12 +1,11 @@
 import { getSql } from "../db/client";
-import { DEMO_USER_ID } from "../db/demo-user";
 import { isFixtureRecipeId } from "../recipes/spoonacular";
 
 // Spoonacular's terms allow storing only recipe id, title and image URL.
 export type LoggedMeal = { recipeId: number; title: string; imageUrl?: string | null };
 
 /** Saves the chosen meal. Fixture recipes (quota fallback / FAKE_SPOONACULAR) are skipped: returns null. */
-export async function logMeal(meal: LoggedMeal, userId = DEMO_USER_ID) {
+export async function logMeal(userId: string, meal: LoggedMeal) {
 	if (isFixtureRecipeId(meal.recipeId)) return null;
 	const sql = getSql();
 	const [, rows] = await sql.transaction([
@@ -20,7 +19,7 @@ export async function logMeal(meal: LoggedMeal, userId = DEMO_USER_ID) {
 	return (rows as { id: string; suggested_at: Date }[])[0];
 }
 
-export async function getRecentMeals(days = 7, userId = DEMO_USER_ID) {
+export async function getRecentMeals(userId: string, days = 7) {
 	const rows = (await getSql()`
 		SELECT m.id, m.title, m.recipe_id, m.suggested_at, r.keeper
 		FROM meals m
@@ -42,7 +41,7 @@ export async function getRecentMeals(days = 7, userId = DEMO_USER_ID) {
  * recent unrated meal logged 2h–7d ago that we haven't asked about. Marks it as
  * asked in the same statement, so the question never repeats.
  */
-export async function claimMealToRate(userId = DEMO_USER_ID) {
+export async function claimMealToRate(userId: string) {
 	const rows = (await getSql()`
 		UPDATE meals SET rating_prompted_at = now()
 		WHERE id = (
@@ -63,7 +62,7 @@ export async function claimMealToRate(userId = DEMO_USER_ID) {
 }
 
 /** Saves (or changes) the keeper rating for one of the user's meals. Null if the meal isn't theirs. */
-export async function rateMeal(mealId: string, keeper: boolean, userId = DEMO_USER_ID) {
+export async function rateMeal(userId: string, mealId: string, keeper: boolean) {
 	const rows = (await getSql()`
 		INSERT INTO meal_ratings (user_id, meal_id, keeper)
 		SELECT user_id, id, ${keeper} FROM meals WHERE id = ${mealId} AND user_id = ${userId}
@@ -74,7 +73,7 @@ export async function rateMeal(mealId: string, keeper: boolean, userId = DEMO_US
 }
 
 /** Up to 10 most recent keepers and non-keepers (any age), as titles. */
-export async function getRatedMeals(userId = DEMO_USER_ID) {
+export async function getRatedMeals(userId: string) {
 	const rows = (await getSql()`
 		SELECT m.title, r.keeper FROM meal_ratings r
 		JOIN meals m ON m.id = r.meal_id
