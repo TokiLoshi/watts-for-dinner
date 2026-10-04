@@ -10,6 +10,7 @@ import { toPhotoDataUrl } from './photo'
 import { FRIDGE_CAPTION, FRIDGE_INSTRUCTIONS } from './prompts'
 import { QuickReplyChips, ShowMoreButton } from './QuickReplies'
 import { ThinkingBubble } from './ThinkingBubble'
+import { useStickToBottom } from './useStickToBottom'
 import type { Message, Recipe, WattsMood } from './types'
 
 /** fridge: waiting for a photo · reading: Watts is listing ingredients · energy: slider · chat: free chat */
@@ -38,11 +39,7 @@ export function ChatFlow({
   const [step, setStep] = useState<Step>('fridge')
   // Quick-reply chips go under Watts's first reply after the energy score, until the user sends something.
   const [showChips, setShowChips] = useState(false)
-  const endRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-  }, [messages, step])
+  const viewportRef = useStickToBottom<HTMLDivElement>()
 
   function post(...added: Message[]) {
     setMessages((prev) => [...prev, ...added])
@@ -90,7 +87,10 @@ export function ChatFlow({
         onReplyDone={() => setStep((s) => (s === 'reading' ? 'energy' : s))}
       />
       <ThreadPrimitive.Root className="flex h-full flex-col justify-end gap-3 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-        <ThreadPrimitive.Viewport className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent,black_2rem)] pt-8">
+        <ThreadPrimitive.Viewport
+          ref={viewportRef}
+          autoScroll={false}
+          className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent,black_2rem)] pt-8">
           {/* Pushes a short chat to the bottom; shrinks away once it scrolls. */}
           <div className="flex-1" />
           {messages.map((m) => (
@@ -115,7 +115,6 @@ export function ChatFlow({
 
           {step === 'energy' && <EnergySlider onSubmit={handleEnergy} />}
 
-          <div ref={endRef} />
         </ThreadPrimitive.Viewport>
 
         <MessageBar onSend={handleText} onPhoto={handlePhoto} />

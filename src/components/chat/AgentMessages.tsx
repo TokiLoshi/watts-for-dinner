@@ -39,7 +39,9 @@ export function AgentMessages({ onCook }: { onCook: (recipe: Recipe) => void }) 
                       message.role === 'user' ? (
                         // The photo's instructions go to Watts but stay out of the chat.
                         text === FRIDGE_INSTRUCTIONS ? null : (
-                          <p className="rounded-2xl rounded-br-md bg-cream px-4 py-2">{text}</p>
+                          <p className="rounded-2xl rounded-br-md bg-cream px-4 py-2">
+                            {withoutRecipeId(text)}
+                          </p>
                         )
                       ) : (
                         <LightMarkdown text={text} />
@@ -56,6 +58,11 @@ export function AgentMessages({ onCook }: { onCook: (recipe: Recipe) => void }) 
       }}
     </ThreadPrimitive.Messages>
   )
+}
+
+/** "Let's cook X (recipe 123)" reads as "Let's cook X"; Watts still gets the id. */
+function withoutRecipeId(text: string) {
+  return text.replace(/\s*\(recipe \d+\)\s*$/, '')
 }
 
 function FridgePhoto({ src }: { src: string }) {
