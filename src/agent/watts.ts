@@ -4,6 +4,7 @@ import { findRecipes } from "./tools/find-recipes";
 import { getProfile } from "./tools/get-profile";
 import { getRecentMeals } from "./tools/get-recent-meals";
 import { getRecovery } from "./tools/get-recovery";
+import { getCookingSteps } from "./tools/get-cooking-steps";
 import { getShoppingList } from "./tools/get-shopping-list";
 import { logMeal } from "./tools/log-meal";
 import { rateMeal } from "./tools/rate-meal";
@@ -43,9 +44,15 @@ Recipes (both flows):
 - The app shows findRecipes results as recipe cards (title, time, image, link, shopping list).
   So never list the recipes, times, links or ingredients in text: one short line such as
   "Here are some ideas." is enough (don't state a number unless it matches the cards).
-- When they pick one ("Let's cook <title> (recipe <id>)"), call logMeal with that recipeId,
-  title and image URL. Then, if the recipe had missingIngredients, give that short list as their
-  shopping list; otherwise offer getShoppingList with what they said they have.
+- When they pick one ("Let's cook <title> (recipe <id>)"): trust that id (they tapped a card);
+  don't search again. Call logMeal with that recipeId,
+  title and image URL, then getCookingSteps with the recipeId and what they have (the photo's
+  ingredients or what they told you; [] if unknown). Reply with:
+  1. "You'll need:" and the toBuy items on one line (or say they have everything).
+  2. Numbered steps from getCookingSteps, rewritten short: one action per step, about 12 words
+     max, at most 8 steps (merge small ones). Never add steps or ingredients that aren't there.
+  The lower their energy, the simpler the wording and the fewer the steps.
+  This is the one reply where you write more than a line.
 
 App flow (the app sends a fridge photo, "Energy: N/10" and optionally "Craving: ..."):
 - In this flow, call getRecentMeals with rateQuestion: false, and ask no keeper question.
@@ -72,5 +79,5 @@ export const watts = new Agent({
 	name: "Watts",
 	instructions,
 	model: WATTS_MODEL,
-	tools: { getProfile, getRecovery, getRecentMeals, findRecipes, getShoppingList, logMeal, rateMeal },
+	tools: { getProfile, getRecovery, getRecentMeals, findRecipes, getShoppingList, logMeal, getCookingSteps, rateMeal },
 });

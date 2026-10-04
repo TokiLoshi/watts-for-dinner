@@ -73,7 +73,11 @@ type SearchResult = {
 	missedIngredients?: { name: string }[];
 };
 type SearchResponse = { results: SearchResult[] };
-type InformationResponse = { extendedIngredients: { nameClean?: string; name: string; amount: number; unit: string }[] };
+type InformationResponse = {
+	extendedIngredients: { nameClean?: string; name: string; amount: number; unit: string }[];
+	instructions?: string | null;
+	analyzedInstructions?: { steps: { number: number; step: string }[] }[];
+};
 
 const isFake = () => process.env.FAKE_SPOONACULAR === "1";
 
@@ -190,14 +194,34 @@ export async function searchRecipes(search: RecipeSearch): Promise<RecipeOption[
 	});
 }
 
-export async function getRecipeIngredients(recipeId: number): Promise<Ingredient[]> {
+// Ingredients and steps come from one information call (1 point). Not stored: Spoonacular's terms.
+async function loadInformation(recipeId: number): Promise<InformationResponse> {
 	// Fixture recipes (e.g. served during a quota fallback) never hit the real API.
-	const data =
-		isFake() || isFixtureRecipeId(recipeId)
-			? await loadInformationFixture(recipeId)
-			: await withQuotaFallback(
-					() => get<InformationResponse>(`/recipes/${recipeId}/information`, { includeNutrition: "false" }),
-					() => loadInformationFixture(recipeId),
-				);
-	return data.extendedIngredients.map((i) => ({ name: i.nameClean ?? i.name, amount: i.amount, unit: i.unit }));
+	return isFake() || isFixtureRecipeId(recipeId)
+		? await loadInformationFixture(recipeId)
+		: await withQuotaFallback(
+				() => get<InformationResponse>(`/recipes/${recipeId}/information`, { includeNutrition: "false" }),
+				() => loadInformationFixture(recipeId),
+			);
+}
+
+const toIngredients = (data: InformationResponse): Ingredient[] =>
+	data.extendedIngredients.map((i) => ({ name: i.nameClean ?? i.name, amount: i.amount, unit: i.unit }));
+
+/** Numbered steps: analyzedInstructions if present, else the plain instructions split into sentences. */
+function toSteps(data: InformationResponse): string[] {
+	const analyzed = (data.analyzedInstructions ?? []).flatMap((block) => block.steps.map((s) => s.step.trim()));
+	if (analyzed.length) return analyzed.filter(Boolean);
+	const plain = (data.instructions ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+	return plain ? plain.split(/(?<=[.!?])\s+(?=[A-Z])/).map((s) => s.trim()).filter(Boolean) : [];
+}
+
+export async function getRecipeIngredients(recipeId: number): Promise<Ingredient[]> {
+	return toIngredients(await loadInformation(recipeId));
+}
+
+/** Ingredients and cooking steps for one recipe, from a single API call. */
+export async function getRecipeDetails(recipeId: number): Promise<{ ingredients: Ingredient[]; steps: string[] }> {
+	const data = await loadInformation(recipeId);
+	return { ingredients: toIngredients(data), steps: toSteps(data) };
 }
