@@ -9,9 +9,9 @@ Short mirror of `CLAUDE.md` (the source of truth) for other coding agents.
 - **Ownership:** Bianca owns `src/agent`, `src/server`, `src/db`. Michael owns
   `src/components`, `src/routes/onboarding`, `src/world`.
 - **Contract 1:** Watts 3D component prop `mood: "idle" | "thinking" | "talking"`.
-- **Contract 2:** onboarding calls server fn `saveProfile(profile: Profile)`, where
+- **Contract 2:** onboarding calls `saveProfile({ data: profile })` from `src/server/profile.ts`, where
   `Profile = { dietaryPreferences: string[]; goal: "performance" | "lose_weight" | "build_muscle" | "maintain" | "other"; goalNote?: string; favouriteMeals: string[]; lastNightDinner: string }`.
-- **Data:** every table has `user_id`; one hardcoded user until auth lands.
+- **Data:** every table has `user_id`; use `DEMO_USER_ID` (`src/db/demo-user.ts`) until auth lands. Migrate: `pnpm db:migrate`.
 - **Security:** the browser never calls outside services; keys stay server-side.
 - **Git:** base is `main`; work on `bianca/<thing>` or `michael/<thing>` via `git switch`;
   small PRs and commits; never commit `.env.local`.

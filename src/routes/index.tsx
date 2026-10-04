@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { MessageBar } from '#/components/MessageBar'
 import { StatsCard } from '#/components/StatsCard'
+import { WattsChat } from '#/components/WattsChat'
 
 export const Route = createFileRoute('/')({ component: Home })
 
@@ -17,11 +17,8 @@ function Home() {
         {/* Watts 3D scene goes here (michael/watts-scene). */}
         <div className="absolute inset-0 bg-radial from-card/60 to-transparent" />
 
-        <div className="absolute inset-x-0 bottom-0 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-          <MessageBar
-            onSend={(text) => console.log('send', text)}
-            onPhoto={(file) => console.log('photo', file.name)}
-          />
+        <div className="absolute inset-0">
+          <WattsChat />
         </div>
       </section>
     </main>
