@@ -17,7 +17,7 @@ Open source (MIT) personal chef + coach agent. Hackathon project by Bianca and M
 - `pnpm db:migrate` – apply `src/db/schema.sql` to `DATABASE_URL` (idempotent; no ORM)
 
 ## Folder ownership
-- Bianca: `src/agent`, `src/server`, `src/db`
+- Bianca: `src/agent`, `src/server`, `src/db`, `src/whoop` (standalone WHOOP toolkit: no app imports)
 - Michael: `src/components`, `src/routes/onboarding`, `src/world`
 - Touching the other person's folders? Ask first.
 
