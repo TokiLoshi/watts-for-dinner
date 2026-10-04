@@ -21,7 +21,7 @@ const FRIDGE_QUESTION: Message = {
   id: 'fridge-question',
   from: 'watts',
   kind: 'text',
-  text: 'Snap a photo of your fridge so I know what we’re working with.',
+  text: 'Hi, I’m Chef Watts! Let’s get cooking. Snap a photo of your fridge so I know what we’re working with.',
   highlight: 'fridge',
   centered: true,
 }
