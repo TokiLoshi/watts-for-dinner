@@ -11,6 +11,7 @@ import { FRIDGE_CAPTION, FRIDGE_INSTRUCTIONS } from './prompts'
 import { QuickReplyChips, ShowMoreButton } from './QuickReplies'
 import { ThinkingBubble } from './ThinkingBubble'
 import { useStickToBottom } from './useStickToBottom'
+import { WattsHero } from './WattsAvatar'
 import type { Message, Recipe, WattsMood } from './types'
 
 /** fridge: waiting for a photo · reading: Watts is listing ingredients · energy: slider · chat: free chat */
@@ -20,7 +21,7 @@ const FRIDGE_QUESTION: Message = {
   id: 'fridge-question',
   from: 'watts',
   kind: 'text',
-  text: 'Snap a photo of your fridge so I know what we’re working with.',
+  text: 'Hi, I’m Chef Watts! Let’s get cooking. Snap a photo of your fridge so I know what we’re working with.',
   highlight: 'fridge',
   centered: true,
 }
@@ -91,8 +92,10 @@ export function ChatFlow({
           ref={viewportRef}
           autoScroll={false}
           className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent,black_2rem)] pt-8">
-          {/* Pushes a short chat to the bottom; shrinks away once it scrolls. */}
-          <div className="flex-1" />
+          {/* Fills the empty space above a short chat with big Watts; scrolls away as messages arrive. */}
+          <div className="flex flex-1 shrink-0 items-center justify-center py-6">
+            <WattsHero />
+          </div>
           {messages.map((m) => (
             <ChatMessage key={m.id} message={m} onCook={handleCook} />
           ))}

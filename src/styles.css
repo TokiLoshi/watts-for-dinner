@@ -71,3 +71,40 @@ body {
     animation: none;
   }
 }
+
+/* Watts's avatar bobbing while he thinks. */
+@keyframes watts-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-watts-bob {
+  animation: watts-bob 1.6s ease-in-out infinite;
+}
+
+/* Big Watts on the start screen: a slow, gentle float. */
+@keyframes watts-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-watts-float {
+  animation: watts-float 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-watts-bob,
+  .animate-watts-float {
+    animation: none;
+  }
+}

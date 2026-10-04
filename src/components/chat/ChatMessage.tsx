@@ -1,5 +1,6 @@
 import { ChefHat, Clock, Zap } from 'lucide-react'
 
+import { WattsAvatar } from './WattsAvatar'
 import type { Message, Recipe } from './types'
 
 export function ChatMessage({
@@ -39,11 +40,18 @@ export function ChatMessage({
 
   const shape = message.centered
     ? 'w-full rounded-2xl text-center'
-    : 'w-full rounded-2xl rounded-bl-md'
-  return (
+    : 'min-w-0 flex-1 rounded-2xl rounded-bl-none'
+  const bubble = (
     <p className={`${shape} border border-white/10 bg-card/80 px-4 py-3 font-serif text-2xl leading-snug text-white backdrop-blur-xl`}>
       <Highlighted text={message.text} word={message.highlight} />
     </p>
+  )
+  if (message.centered) return bubble
+  return (
+    <div className="flex items-end gap-2">
+      <WattsAvatar />
+      {bubble}
+    </div>
   )
 }
 
