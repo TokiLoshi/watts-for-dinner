@@ -10,7 +10,8 @@
     "generate-routes": "tsr generate",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "node .output/server/index.mjs"
+    "start": "node .output/server/index.mjs",
+    "db:migrate": "node --env-file=.env.local src/db/migrate.mjs"
   },
   "dependencies": {
     "@ai-sdk/react": "^4.0.130",
@@ -18,6 +19,7 @@
     "@assistant-ui/react": "^0.15.23",
     "@mastra/ai-sdk": "^1.10.6",
     "@mastra/core": "^1.74.0",
+    "@neondatabase/serverless": "^1.2.0",
     "@tanstack/react-router": "1.170.41",
     "@tanstack/react-start": "1.168.60",
     "ai": "^7.0.127",
