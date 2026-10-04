@@ -5,10 +5,10 @@ export type Recipe = {
   id: string
   title: string
   cookMinutes: number
-  /** Effort needed, 1–10, compared against the user's energy score. */
-  energy: number
-  /** Path under public/, e.g. /recipes/lasagna.jpg */
-  image: string
+  /** Effort needed, 1–10. Bianca's recipe search doesn't provide this yet. */
+  energy?: number
+  /** Path under public/ or a Spoonacular image URL; null when there's no photo. */
+  image: string | null
 }
 
 export type Message =

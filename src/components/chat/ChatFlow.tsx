@@ -7,6 +7,7 @@ import { AgentMessages } from './AgentMessages'
 import { ChatMessage } from './ChatMessage'
 import { EnergySlider } from './EnergySlider'
 import { toPhotoDataUrl } from './photo'
+import { FRIDGE_CAPTION, FRIDGE_INSTRUCTIONS } from './prompts'
 import { QuickReplyChips, ShowMoreButton } from './QuickReplies'
 import type { Message, Recipe, WattsMood } from './types'
 
@@ -21,8 +22,6 @@ const FRIDGE_QUESTION: Message = {
   highlight: 'fridge',
   centered: true,
 }
-
-const FRIDGE_PROMPT = 'Here’s my fridge. List the ingredients you can see. Don’t ask about my energy, I’ll tell you next.'
 
 let nextId = 0
 const newId = () => `m${++nextId}`
@@ -55,7 +54,8 @@ export function ChatFlow({
       role: 'user',
       content: [
         { type: 'image', image },
-        { type: 'text', text: FRIDGE_PROMPT },
+        { type: 'text', text: FRIDGE_CAPTION },
+        { type: 'text', text: FRIDGE_INSTRUCTIONS },
       ],
     })
     if (step === 'fridge') setStep('reading')
@@ -96,7 +96,7 @@ export function ChatFlow({
             <ChatMessage key={m.id} message={m} onCook={handleCook} />
           ))}
 
-          <AgentMessages />
+          <AgentMessages onCook={handleCook} />
 
           {step === 'chat' && <ShowMoreButton onSend={handleText} />}
           {showChips && <QuickReplyChips onSend={handleText} />}

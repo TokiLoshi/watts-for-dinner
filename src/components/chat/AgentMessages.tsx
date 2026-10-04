@@ -1,37 +1,53 @@
 import type { ReactNode } from 'react'
 import { MessagePrimitive, ThreadPrimitive } from '@assistant-ui/react'
 
+import { RecipeCard } from './ChatMessage'
+import { FRIDGE_INSTRUCTIONS } from './prompts'
+import { recipeCardsFor } from './recipeResults'
+import type { Recipe } from './types'
+
 /** Messages from Bianca's streaming agent, styled like the scripted chat. */
-export function AgentMessages() {
+export function AgentMessages({ onCook }: { onCook: (recipe: Recipe) => void }) {
   return (
     <ThreadPrimitive.Messages>
-      {({ message }) => (
-        <MessagePrimitive.Root
-          className={
-            message.role === 'user'
-              ? 'ml-auto flex max-w-[90%] flex-col items-end gap-2 text-base text-teal-world'
-              : 'w-full rounded-2xl rounded-bl-md border border-white/10 bg-card/80 px-4 py-3 text-base leading-relaxed text-white backdrop-blur-xl'
-          }
-        >
-          {/* Photos arrive as attachments, not message parts. */}
-          {message.attachments?.flatMap((a) =>
-            a.content.map((c, i) =>
-              c.type === 'image' ? <FridgePhoto key={`${a.id}-${i}`} src={c.image} /> : null,
-            ),
-          )}
-          <MessagePrimitive.Parts
-            components={{
-              Image: ({ image }) => <FridgePhoto src={image} />,
-              Text: ({ text }) =>
-                message.role === 'user' ? (
-                  <p className="rounded-2xl rounded-br-md bg-cream px-4 py-2">{text}</p>
-                ) : (
-                  <LightMarkdown text={text} />
+      {({ message }) => {
+        const recipes = message.role === 'assistant' ? recipeCardsFor(message) : []
+        return (
+          <div className="flex flex-col gap-2">
+            <MessagePrimitive.Root
+              className={
+                message.role === 'user'
+                  ? 'ml-auto flex max-w-[90%] flex-col items-end gap-2 text-base text-teal-world'
+                  : 'w-full rounded-2xl rounded-bl-md border border-white/10 bg-card/80 px-4 py-3 text-base leading-relaxed text-white backdrop-blur-xl'
+              }
+            >
+              {/* Photos arrive as attachments, not message parts. */}
+              {message.attachments?.flatMap((a) =>
+                a.content.map((c, i) =>
+                  c.type === 'image' ? <FridgePhoto key={`${a.id}-${i}`} src={c.image} /> : null,
                 ),
-            }}
-          />
-        </MessagePrimitive.Root>
-      )}
+              )}
+              <MessagePrimitive.Parts
+                components={{
+                  Image: ({ image }) => <FridgePhoto src={image} />,
+                  Text: ({ text }) =>
+                    message.role === 'user' ? (
+                      // The photo's instructions go to Watts but stay out of the chat.
+                      text === FRIDGE_INSTRUCTIONS ? null : (
+                        <p className="rounded-2xl rounded-br-md bg-cream px-4 py-2">{text}</p>
+                      )
+                    ) : (
+                      <LightMarkdown text={text} />
+                    ),
+                }}
+              />
+            </MessagePrimitive.Root>
+            {recipes.map((recipe) => (
+              <RecipeCard key={recipe.id} recipe={recipe} onCook={onCook} />
+            ))}
+          </div>
+        )
+      }}
     </ThreadPrimitive.Messages>
   )
 }

@@ -3,7 +3,7 @@ import type { Recipe } from './types'
 // Stand-in data until Bianca's recipe server function exists. Two recipes per
 // energy level so every score has at least three matches within ±1. Photos are
 // from Unsplash, saved in public/recipes/ (credits in the README).
-const MOCK_RECIPES: Recipe[] = (
+const MOCK_RECIPES: (Recipe & { energy: number })[] = (
   [
     { id: 'yogurt-bowl', title: 'Greek yogurt bowl with honey & walnuts', cookMinutes: 3, energy: 1 },
     { id: 'avo-toast', title: 'Avocado toast with chili flakes', cookMinutes: 5, energy: 1 },
@@ -25,7 +25,7 @@ const MOCK_RECIPES: Recipe[] = (
     { id: 'lasagna', title: 'Lasagna', cookMinutes: 75, energy: 9 },
     { id: 'fresh-pasta', title: 'Fresh pasta with ragù', cookMinutes: 120, energy: 10 },
     { id: 'ramen', title: 'Homemade ramen', cookMinutes: 150, energy: 10 },
-  ] satisfies Omit<Recipe, 'image'>[]
+  ] satisfies (Omit<Recipe, 'image'> & { energy: number })[]
 ).map((r) => ({ ...r, image: `/recipes/${r.id}.jpg` }))
 
 /** Three recipes within ±1 of the energy score, shortest cook time first. */
