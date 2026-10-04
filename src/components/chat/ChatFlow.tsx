@@ -9,6 +9,7 @@ import { EnergySlider } from './EnergySlider'
 import { toPhotoDataUrl } from './photo'
 import { FRIDGE_CAPTION, FRIDGE_INSTRUCTIONS } from './prompts'
 import { QuickReplyChips, ShowMoreButton } from './QuickReplies'
+import { ThinkingBubble } from './ThinkingBubble'
 import type { Message, Recipe, WattsMood } from './types'
 
 /** fridge: waiting for a photo · reading: Watts is listing ingredients · energy: slider · chat: free chat */
@@ -97,6 +98,7 @@ export function ChatFlow({
           ))}
 
           <AgentMessages onCook={handleCook} />
+          <ThinkingBubble />
 
           {step === 'chat' && <ShowMoreButton onSend={handleText} />}
           {showChips && <QuickReplyChips onSend={handleText} />}
