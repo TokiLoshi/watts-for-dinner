@@ -1,6 +1,7 @@
 import { HeadContent, Scripts, createRootRoute, redirect } from '@tanstack/react-router'
 
 import { getSessionUser } from '../server/session'
+import { SparklesBackground } from './-sparkles-bg'
 import appCss from '../styles.css?url'
 
 // Pages anyone can see. Everything else needs a signed-in user.
@@ -46,7 +47,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        {children}
+        <SparklesBackground />
+        {/* Content stacks above the sparkles canvas (z-0). */}
+        <div className="relative z-10">{children}</div>
 
         <Scripts />
       </body>

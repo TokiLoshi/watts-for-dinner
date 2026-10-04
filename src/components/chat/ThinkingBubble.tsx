@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react'
 import { useAuiState } from '@assistant-ui/react'
 
 import { FRIDGE_CAPTION } from './prompts'
@@ -41,16 +40,9 @@ export function ThinkingBubble() {
   const isRunning = useAuiState((s) => s.thread.isRunning)
   const messages = useAuiState((s) => s.thread.messages) as readonly Msg[]
   const label = thinkingLabel(isRunning, messages)
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (label) ref.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-  }, [label])
-
   if (!label) return null
   return (
     <div
-      ref={ref}
       role="status"
       className="flex max-w-[90%] items-center gap-3 self-start rounded-2xl rounded-bl-md border border-white/10 bg-card/80 px-4 py-3 backdrop-blur-xl"
     >

@@ -28,7 +28,7 @@ function SignIn() {
   }
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-8 bg-teal-world px-5 py-10 font-sans text-cream">
+    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-8 px-5 py-10 font-sans text-cream">
       <header className="flex flex-col gap-2 text-center">
         <span className="text-5xl" aria-hidden="true">
           🥔
