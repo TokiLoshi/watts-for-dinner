@@ -4,7 +4,7 @@ import { MessageBar } from '#/components/MessageBar'
 import { ChatMessage } from './ChatMessage'
 import { EnergySlider } from './EnergySlider'
 import { getRecipeSuggestions } from './recipes'
-import type { Message, WattsMood } from './types'
+import type { Message, Recipe, WattsMood } from './types'
 
 type Step = 'energy' | 'fridge' | 'recipes' | 'chat'
 
@@ -18,6 +18,7 @@ const ENERGY_QUESTION: Message = {
   kind: 'text',
   text: 'How much energy do you have today?',
   highlight: 'energy',
+  centered: true,
 }
 
 let nextId = 0
@@ -112,6 +113,20 @@ export function ChatFlow({
     showRecipes()
   }
 
+  function handleCook(recipe: Recipe) {
+    post({ id: newId(), from: 'user', kind: 'text', text: `Let’s cook ${recipe.title}` })
+    // Placeholder until the agent can walk through the recipe.
+    wattsSays([
+      {
+        id: newId(),
+        from: 'watts',
+        kind: 'text',
+        text: 'Great pick. Step-by-step cooking is coming soon!',
+        highlight: 'Great',
+      },
+    ])
+  }
+
   function handleText(text: string) {
     post({ id: newId(), from: 'user', kind: 'text', text })
     // Placeholder until Bianca's agent is wired in.
@@ -130,7 +145,7 @@ export function ChatFlow({
     <div className="flex h-full flex-col justify-end gap-3 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
       <div className="flex max-h-[70%] flex-col gap-2 overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent,black_2rem)] pt-8">
         {messages.map((m) => (
-          <ChatMessage key={m.id} message={m} />
+          <ChatMessage key={m.id} message={m} onCook={handleCook} />
         ))}
 
         {step === 'energy' && <EnergySlider onSubmit={handleEnergy} />}

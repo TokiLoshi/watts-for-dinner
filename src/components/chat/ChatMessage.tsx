@@ -2,7 +2,13 @@ import { Clock, Zap } from 'lucide-react'
 
 import type { Message, Recipe } from './types'
 
-export function ChatMessage({ message }: { message: Message }) {
+export function ChatMessage({
+  message,
+  onCook,
+}: {
+  message: Message
+  onCook: (recipe: Recipe) => void
+}) {
   if (message.kind === 'photo') {
     return (
       <img
@@ -17,7 +23,7 @@ export function ChatMessage({ message }: { message: Message }) {
     return (
       <div className="flex flex-col gap-2">
         {message.recipes.map((recipe) => (
-          <RecipeCard key={recipe.id} recipe={recipe} />
+          <RecipeCard key={recipe.id} recipe={recipe} onCook={onCook} />
         ))}
       </div>
     )
@@ -31,8 +37,11 @@ export function ChatMessage({ message }: { message: Message }) {
     )
   }
 
+  const shape = message.centered
+    ? 'w-full rounded-2xl text-center'
+    : 'max-w-[90%] rounded-2xl rounded-bl-md'
   return (
-    <p className="max-w-[90%] rounded-2xl rounded-bl-md border border-white/10 bg-card/80 px-4 py-2.5 font-serif text-xl leading-snug text-white backdrop-blur-xl">
+    <p className={`${shape} border border-white/10 bg-card/80 px-4 py-2.5 font-serif text-xl leading-snug text-white backdrop-blur-xl`}>
       <Highlighted text={message.text} word={message.highlight} />
     </p>
   )
@@ -51,18 +60,38 @@ function Highlighted({ text, word }: { text: string; word?: string }) {
   )
 }
 
-function RecipeCard({ recipe }: { recipe: Recipe }) {
+function RecipeCard({
+  recipe,
+  onCook,
+}: {
+  recipe: Recipe
+  onCook: (recipe: Recipe) => void
+}) {
   return (
-    <article className="rounded-2xl border border-white/10 bg-card/80 px-4 py-3 backdrop-blur-xl">
-      <h3 className="text-sm font-medium text-white">{recipe.title}</h3>
-      <div className="mt-1 flex gap-4 text-xs text-white/60">
-        <span className="flex items-center gap-1">
-          <Clock className="size-3.5" /> {recipe.cookMinutes} min
-        </span>
-        <span className="flex items-center gap-1">
-          <Zap className="size-3.5 text-strain" /> Effort {recipe.energy}/10
-        </span>
+    <article className="flex items-center gap-3 rounded-2xl bg-cream p-2.5 text-teal-world shadow-lg shadow-black/20">
+      <img
+        src={recipe.image}
+        alt=""
+        className="size-20 shrink-0 rounded-xl bg-teal-world/10 object-cover"
+      />
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <h3 className="font-serif text-base leading-tight">{recipe.title}</h3>
+        <div className="flex gap-3 text-xs text-teal-world/60">
+          <span className="flex items-center gap-1">
+            <Clock className="size-3.5" /> {recipe.cookMinutes} min
+          </span>
+          <span className="flex items-center gap-1">
+            <Zap className="size-3.5 text-strain" /> Effort {recipe.energy}/10
+          </span>
+        </div>
       </div>
+      <button
+        type="button"
+        onClick={() => onCook(recipe)}
+        className="h-12 shrink-0 rounded-full bg-lime px-4 text-sm font-semibold text-teal-world transition active:scale-[0.97]"
+      >
+        Cook this
+      </button>
     </article>
   )
 }

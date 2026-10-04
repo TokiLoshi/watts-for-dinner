@@ -28,7 +28,7 @@ export function EnergySlider({ onSubmit }: { onSubmit: (energy: number) => void 
         onClick={() => onSubmit(energy)}
         className="mt-4 h-11 w-full rounded-full bg-lime font-medium text-teal-world transition active:scale-[0.98]"
       >
-        That&rsquo;s me
+        Lock it in
       </button>
     </div>
   )
