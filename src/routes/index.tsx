@@ -1,47 +1,26 @@
 import { createFileRoute } from '@tanstack/react-router'
-import {
-  AssistantRuntimeProvider,
-  ComposerPrimitive,
-  MessagePrimitive,
-  ThreadPrimitive,
-} from '@assistant-ui/react'
-import { useChatRuntime } from '@assistant-ui/ai-sdk'
+
+import { StatsCard } from '#/components/StatsCard'
+import { WattsChat } from '#/components/WattsChat'
 
 export const Route = createFileRoute('/')({ component: Home })
 
-// Plain chat UI from assistant-ui primitives. Posts to /api/chat (the default).
-// Unstyled on purpose: Michael will move this into src/components and style it.
 function Home() {
-  const runtime = useChatRuntime()
-
   return (
-    <main className="mx-auto flex h-screen max-w-2xl flex-col p-4">
-      <h1 className="mb-4 text-3xl font-bold">Watts for Dinner</h1>
-      <AssistantRuntimeProvider runtime={runtime}>
-        <ThreadPrimitive.Root className="flex min-h-0 flex-1 flex-col">
-          <ThreadPrimitive.Viewport className="flex-1 space-y-3 overflow-y-auto">
-            <ThreadPrimitive.Empty>
-              <p>Say hi to Watts and tell him how your day's going.</p>
-            </ThreadPrimitive.Empty>
-            <ThreadPrimitive.Messages>
-              {({ message }) => (
-                <MessagePrimitive.Root>
-                  <strong>{message.role === 'user' ? 'You' : 'Watts'}: </strong>
-                  <MessagePrimitive.Parts />
-                </MessagePrimitive.Root>
-              )}
-            </ThreadPrimitive.Messages>
-          </ThreadPrimitive.Viewport>
-          <ComposerPrimitive.Root className="mt-4 flex gap-2">
-            <ComposerPrimitive.Input
-              className="flex-1 border p-2"
-              placeholder="Message Watts…"
-              autoFocus
-            />
-            <ComposerPrimitive.Send className="border px-4">Send</ComposerPrimitive.Send>
-          </ComposerPrimitive.Root>
-        </ThreadPrimitive.Root>
-      </AssistantRuntimeProvider>
+    <main className="mx-auto flex h-dvh max-w-md flex-col bg-teal-world font-sans text-white">
+      <header className="basis-1/3 px-4 pt-[max(1rem,env(safe-area-inset-top))]">
+        {/* Placeholder numbers until Whoop data is wired up. */}
+        <StatsCard recovery={68} strain={11.4} mealPref="High protein" />
+      </header>
+
+      <section className="relative basis-2/3 overflow-hidden">
+        {/* Watts 3D scene goes here (michael/watts-scene). */}
+        <div className="absolute inset-0 bg-radial from-card/60 to-transparent" />
+
+        <div className="absolute inset-0">
+          <WattsChat />
+        </div>
+      </section>
     </main>
   )
 }
