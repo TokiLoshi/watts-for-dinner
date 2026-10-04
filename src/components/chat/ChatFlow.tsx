@@ -1,23 +1,25 @@
 import { useEffect, useRef, useState } from 'react'
+import { AssistantRuntimeProvider, ThreadPrimitive, useAuiState } from '@assistant-ui/react'
+import { useChatRuntime } from '@assistant-ui/ai-sdk'
 
 import { MessageBar } from '#/components/MessageBar'
+import { AgentMessages } from './AgentMessages'
 import { ChatMessage } from './ChatMessage'
 import { EnergySlider } from './EnergySlider'
-import { getRecipeSuggestions } from './recipes'
+import { toPhotoDataUrl } from './photo'
+import { FRIDGE_CAPTION, FRIDGE_INSTRUCTIONS } from './prompts'
+import { QuickReplyChips, ShowMoreButton } from './QuickReplies'
 import type { Message, Recipe, WattsMood } from './types'
 
-type Step = 'energy' | 'fridge' | 'recipes' | 'chat'
+/** fridge: waiting for a photo · reading: Watts is listing ingredients · energy: slider · chat: free chat */
+type Step = 'fridge' | 'reading' | 'energy' | 'chat'
 
-const THINK_MS = 700
-const TALK_MS = 1600
-const FRIDGE_SEEN_KEY = 'watts:fridge-step-seen'
-
-const ENERGY_QUESTION: Message = {
-  id: 'energy-question',
+const FRIDGE_QUESTION: Message = {
+  id: 'fridge-question',
   from: 'watts',
   kind: 'text',
-  text: 'How much energy do you have today?',
-  highlight: 'energy',
+  text: 'Snap a photo of your fridge so I know what we’re working with.',
+  highlight: 'fridge',
   centered: true,
 }
 
@@ -29,156 +31,116 @@ export function ChatFlow({
 }: {
   onMoodChange?: (mood: WattsMood) => void
 }) {
-  const [messages, setMessages] = useState<Message[]>([ENERGY_QUESTION])
-  const [step, setStep] = useState<Step>('energy')
-  const energyRef = useRef(5)
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([])
+  // Bianca's agent runtime; posts to /api/chat (the default). Don't change that here.
+  const runtime = useChatRuntime()
+  const [messages, setMessages] = useState<Message[]>([FRIDGE_QUESTION])
+  const [step, setStep] = useState<Step>('fridge')
+  // Quick-reply chips go under Watts's first reply after the energy score, until the user sends something.
+  const [showChips, setShowChips] = useState(false)
   const endRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => () => timers.current.forEach(clearTimeout), [])
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
   }, [messages, step])
 
-  function after(ms: number, fn: () => void) {
-    timers.current.push(setTimeout(fn, ms))
-  }
-
   function post(...added: Message[]) {
     setMessages((prev) => [...prev, ...added])
   }
 
-  /** Watts "thinks", then speaks, then settles back to idle. */
-  function wattsSays(reply: Message[] | Promise<Message[]>, then?: () => void) {
-    onMoodChange?.('thinking')
-    const ready = Promise.all([reply, new Promise((r) => after(THINK_MS, () => r(null)))])
-    ready.then(([msgs]) => {
-      post(...msgs)
-      then?.()
-      onMoodChange?.('talking')
-      after(TALK_MS, () => onMoodChange?.('idle'))
+  async function handlePhoto(file: File) {
+    setShowChips(false)
+    const image = await toPhotoDataUrl(file)
+    runtime.thread.append({
+      role: 'user',
+      content: [
+        { type: 'image', image },
+        { type: 'text', text: FRIDGE_CAPTION },
+        { type: 'text', text: FRIDGE_INSTRUCTIONS },
+      ],
     })
-  }
-
-  function showRecipes() {
-    setStep('recipes')
-    const energy = energyRef.current
-    wattsSays(
-      getRecipeSuggestions(energy).then((recipes) => [
-        {
-          id: newId(),
-          from: 'watts',
-          kind: 'text',
-          text: `Three ideas for a ${energy}/10 day, quickest first.`,
-          highlight: 'quickest',
-        },
-        { id: newId(), from: 'watts', kind: 'recipes', recipes },
-      ]),
-      () => setStep('chat'),
-    )
-  }
-
-  function handleEnergy(energy: number) {
-    energyRef.current = energy
-    post({ id: newId(), from: 'user', kind: 'text', text: `${energy} / 10` })
-
-    if (hasSeenFridgeStep()) {
-      showRecipes()
-      return
-    }
-    setStep('fridge')
-    wattsSays([
-      {
-        id: newId(),
-        from: 'watts',
-        kind: 'text',
-        text: 'Snap a photo of your fridge so I know what we’re working with.',
-        highlight: 'fridge',
-      },
-    ])
-  }
-
-  function handlePhoto(file: File) {
-    post({ id: newId(), from: 'user', kind: 'photo', url: URL.createObjectURL(file) })
-    if (step === 'fridge') {
-      markFridgeStepSeen()
-      showRecipes()
-    }
+    if (step === 'fridge') setStep('reading')
   }
 
   function skipFridge() {
-    markFridgeStepSeen()
     post({ id: newId(), from: 'user', kind: 'text', text: 'Skip for now' })
-    showRecipes()
+    setStep('energy')
   }
 
+  function handleEnergy(energy: number) {
+    runtime.thread.append(`Energy: ${energy}/10`)
+    setStep('chat')
+    setShowChips(true)
+  }
+
+  // Typed messages and "Cook this" go to Bianca's streaming agent.
   function handleCook(recipe: Recipe) {
-    post({ id: newId(), from: 'user', kind: 'text', text: `Let’s cook ${recipe.title}` })
-    // Placeholder until the agent can walk through the recipe.
-    wattsSays([
-      {
-        id: newId(),
-        from: 'watts',
-        kind: 'text',
-        text: 'Great pick. Step-by-step cooking is coming soon!',
-        highlight: 'Great',
-      },
-    ])
+    handleText(`Let's cook ${recipe.title} (recipe ${recipe.id})`)
   }
 
   function handleText(text: string) {
-    post({ id: newId(), from: 'user', kind: 'text', text })
-    // Placeholder until Bianca's agent is wired in.
-    wattsSays([
-      {
-        id: newId(),
-        from: 'watts',
-        kind: 'text',
-        text: 'I’m still learning to chat. Ask me again soon!',
-        highlight: 'soon',
-      },
-    ])
+    setShowChips(false)
+    runtime.thread.append(text)
   }
 
   return (
-    <div className="flex h-full flex-col justify-end gap-3 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-      <div className="flex max-h-[70%] flex-col gap-2 overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent,black_2rem)] pt-8">
-        {messages.map((m) => (
-          <ChatMessage key={m.id} message={m} onCook={handleCook} />
-        ))}
+    <AssistantRuntimeProvider runtime={runtime}>
+      <ReplyWatcher
+        onMoodChange={onMoodChange}
+        onReplyDone={() => setStep((s) => (s === 'reading' ? 'energy' : s))}
+      />
+      <ThreadPrimitive.Root className="flex h-full flex-col justify-end gap-3 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <ThreadPrimitive.Viewport className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent,black_2rem)] pt-8">
+          {/* Pushes a short chat to the bottom; shrinks away once it scrolls. */}
+          <div className="flex-1" />
+          {messages.map((m) => (
+            <ChatMessage key={m.id} message={m} onCook={handleCook} />
+          ))}
 
-        {step === 'energy' && <EnergySlider onSubmit={handleEnergy} />}
+          <AgentMessages onCook={handleCook} />
 
-        {step === 'fridge' && (
-          <button
-            type="button"
-            onClick={skipFridge}
-            className="self-start rounded-full border border-white/20 px-4 py-1.5 text-xs text-white/70"
-          >
-            Skip for now
-          </button>
-        )}
-        <div ref={endRef} />
-      </div>
+          {step === 'chat' && <ShowMoreButton onSend={handleText} />}
+          {showChips && <QuickReplyChips onSend={handleText} />}
 
-      <MessageBar onSend={handleText} onPhoto={handlePhoto} />
-    </div>
+          {step === 'fridge' && (
+            <button
+              type="button"
+              onClick={skipFridge}
+              className="self-start rounded-full border border-white/20 px-5 py-2.5 text-sm text-white/80"
+            >
+              Skip for now
+            </button>
+          )}
+
+          {step === 'energy' && <EnergySlider onSubmit={handleEnergy} />}
+
+          <div ref={endRef} />
+        </ThreadPrimitive.Viewport>
+
+        <MessageBar onSend={handleText} onPhoto={handlePhoto} />
+      </ThreadPrimitive.Root>
+    </AssistantRuntimeProvider>
   )
 }
 
-function hasSeenFridgeStep() {
-  try {
-    return localStorage.getItem(FRIDGE_SEEN_KEY) === '1'
-  } catch {
-    return false
-  }
-}
+/** Tells ChatFlow when Watts finishes a streamed reply, and drives his mood meanwhile. */
+function ReplyWatcher({
+  onReplyDone,
+  onMoodChange,
+}: {
+  onReplyDone: () => void
+  onMoodChange?: (mood: WattsMood) => void
+}) {
+  const isRunning = useAuiState((s) => s.thread.isRunning)
+  const wasRunning = useRef(false)
 
-function markFridgeStepSeen() {
-  try {
-    localStorage.setItem(FRIDGE_SEEN_KEY, '1')
-  } catch {
-    // Storage blocked (private mode); the fridge step just shows again.
-  }
+  useEffect(() => {
+    if (isRunning) onMoodChange?.('talking')
+    if (wasRunning.current && !isRunning) {
+      onMoodChange?.('idle')
+      onReplyDone()
+    }
+    wasRunning.current = isRunning
+  }, [isRunning, onReplyDone, onMoodChange])
+
+  return null
 }

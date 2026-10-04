@@ -1,0 +1,242 @@
+{
+  "id": -1,
+  "image": "https://img.example.com/recipes/fixture-1-556x370.jpg",
+  "imageType": "jpg",
+  "title": "Lemon Chickpea Orzo",
+  "readyInMinutes": 20,
+  "servings": 2,
+  "sourceUrl": "https://recipes.example.com/fixture-1",
+  "vegetarian": true,
+  "vegan": false,
+  "glutenFree": false,
+  "dairyFree": true,
+  "veryHealthy": false,
+  "cheap": false,
+  "veryPopular": false,
+  "sustainable": false,
+  "lowFodmap": false,
+  "weightWatcherSmartPoints": 9,
+  "gaps": "no",
+  "preparationMinutes": 7,
+  "cookingMinutes": 13,
+  "aggregateLikes": 42,
+  "healthScore": 61,
+  "creditsText": "Example Kitchen",
+  "license": null,
+  "sourceName": "Example Kitchen",
+  "pricePerServing": 187.5,
+  "extendedIngredients": [
+    {
+      "id": 1,
+      "aisle": "Pasta and Rice",
+      "image": "orzo.jpg",
+      "consistency": "SOLID",
+      "name": "orzo",
+      "nameClean": "orzo",
+      "original": "1 cup orzo",
+      "originalName": "orzo",
+      "amount": 1,
+      "unit": "cup",
+      "meta": [],
+      "measures": {
+        "us": {
+          "amount": 1,
+          "unitShort": "cup",
+          "unitLong": "cup"
+        },
+        "metric": {
+          "amount": 170,
+          "unitShort": "g",
+          "unitLong": "g"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "aisle": "Canned and Jarred",
+      "image": "chickpeas.jpg",
+      "consistency": "SOLID",
+      "name": "chickpeas",
+      "nameClean": "chickpeas",
+      "original": "1 can chickpeas",
+      "originalName": "chickpeas",
+      "amount": 1,
+      "unit": "can",
+      "meta": [
+        "drained"
+      ],
+      "measures": {
+        "us": {
+          "amount": 1,
+          "unitShort": "can",
+          "unitLong": "can"
+        },
+        "metric": {
+          "amount": 400,
+          "unitShort": "g",
+          "unitLong": "g"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "aisle": "Produce",
+      "image": "lemon.jpg",
+      "consistency": "SOLID",
+      "name": "lemon",
+      "nameClean": "lemon",
+      "original": "1  lemon",
+      "originalName": "lemon",
+      "amount": 1,
+      "unit": "",
+      "meta": [],
+      "measures": {
+        "us": {
+          "amount": 1,
+          "unitShort": "",
+          "unitLong": ""
+        },
+        "metric": {
+          "amount": 1,
+          "unitShort": "",
+          "unitLong": ""
+        }
+      }
+    },
+    {
+      "id": 4,
+      "aisle": "Produce",
+      "image": "garlic.jpg",
+      "consistency": "SOLID",
+      "name": "garlic",
+      "nameClean": "garlic",
+      "original": "2 cloves garlic",
+      "originalName": "garlic",
+      "amount": 2,
+      "unit": "cloves",
+      "meta": [
+        "minced"
+      ],
+      "measures": {
+        "us": {
+          "amount": 2,
+          "unitShort": "cloves",
+          "unitLong": "cloves"
+        },
+        "metric": {
+          "amount": 2,
+          "unitShort": "cloves",
+          "unitLong": "cloves"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "aisle": "Produce",
+      "image": "baby-spinach.jpg",
+      "consistency": "SOLID",
+      "name": "baby spinach",
+      "nameClean": "baby spinach",
+      "original": "2 cups baby spinach",
+      "originalName": "baby spinach",
+      "amount": 2,
+      "unit": "cups",
+      "meta": [],
+      "measures": {
+        "us": {
+          "amount": 2,
+          "unitShort": "cups",
+          "unitLong": "cups"
+        },
+        "metric": {
+          "amount": 60,
+          "unitShort": "g",
+          "unitLong": "g"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "aisle": "Oil, Vinegar, Salad Dressing",
+      "image": "olive-oil.jpg",
+      "consistency": "SOLID",
+      "name": "olive oil",
+      "nameClean": "olive oil",
+      "original": "2 tbsp olive oil",
+      "originalName": "olive oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "meta": [],
+      "measures": {
+        "us": {
+          "amount": 2,
+          "unitShort": "tbsp",
+          "unitLong": "tbsp"
+        },
+        "metric": {
+          "amount": 2,
+          "unitShort": "Tbsps",
+          "unitLong": "Tbsps"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "aisle": "Spices and Seasonings",
+      "image": "salt.jpg",
+      "consistency": "SOLID",
+      "name": "salt",
+      "nameClean": "salt",
+      "original": "0.5 tsp salt",
+      "originalName": "salt",
+      "amount": 0.5,
+      "unit": "tsp",
+      "meta": [],
+      "measures": {
+        "us": {
+          "amount": 0.5,
+          "unitShort": "tsp",
+          "unitLong": "tsp"
+        },
+        "metric": {
+          "amount": 0.5,
+          "unitShort": "tsps",
+          "unitLong": "tsps"
+        }
+      }
+    }
+  ],
+  "summary": "A made-up fixture recipe: Lemon Chickpea Orzo.",
+  "cuisines": [],
+  "dishTypes": [
+    "main course"
+  ],
+  "diets": [
+    "vegetarian",
+    "dairy free"
+  ],
+  "occasions": [],
+  "instructions": "Cook the orzo. Warm the chickpeas and garlic in oil, then stir everything together with lemon and spinach.",
+  "analyzedInstructions": [
+    {
+      "name": "",
+      "steps": [
+        {
+          "number": 1,
+          "step": "Cook the orzo.",
+          "ingredients": [],
+          "equipment": []
+        },
+        {
+          "number": 2,
+          "step": "Warm the chickpeas and garlic in oil, then stir everything together with lemon and spinach.",
+          "ingredients": [],
+          "equipment": []
+        }
+      ]
+    }
+  ],
+  "language": "en",
+  "spoonacularScore": 72.5,
+  "spoonacularSourceUrl": "https://recipes.example.com/spoon/fixture-1"
+}
