@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
@@ -27,6 +28,11 @@ const IndexRoute = IndexRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignInRoute = SignInRouteImport.update({
@@ -68,6 +74,7 @@ const ApiWhoopDisconnectRoute = ApiWhoopDisconnectRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
   '/api/chat': typeof ApiChatRoute
   '/onboarding/': typeof OnboardingIndexRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
   '/api/chat': typeof ApiChatRoute
   '/onboarding': typeof OnboardingIndexRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
   '/api/chat': typeof ApiChatRoute
   '/onboarding/': typeof OnboardingIndexRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/privacy'
+    | '/profile'
     | '/sign-in'
     | '/api/chat'
     | '/onboarding/'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/privacy'
+    | '/profile'
     | '/sign-in'
     | '/api/chat'
     | '/onboarding'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/privacy'
+    | '/profile'
     | '/sign-in'
     | '/api/chat'
     | '/onboarding/'
@@ -138,6 +150,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PrivacyRoute: typeof PrivacyRoute
+  ProfileRoute: typeof ProfileRoute
   SignInRoute: typeof SignInRoute
   ApiChatRoute: typeof ApiChatRoute
   OnboardingIndexRoute: typeof OnboardingIndexRoute
@@ -161,6 +174,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sign-in': {
@@ -218,6 +238,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PrivacyRoute: PrivacyRoute,
+  ProfileRoute: ProfileRoute,
   SignInRoute: SignInRoute,
   ApiChatRoute: ApiChatRoute,
   OnboardingIndexRoute: OnboardingIndexRoute,

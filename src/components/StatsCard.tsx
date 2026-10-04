@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
-import { Leaf } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { User } from 'lucide-react'
 
 import { getRecoverySummary } from '#/server/recovery'
 import type { RecoverySummary } from '#/server/recovery'
 
 const EMPTY: RecoverySummary = { connected: true, recoveryScore: null, dayStrain: null }
 
-export function StatsCard({ mealPref }: { mealPref: string }) {
+export function StatsCard() {
   // null while loading; shows "–" in the rings until Whoop answers.
   const [summary, setSummary] = useState<RecoverySummary | null>(null)
 
@@ -52,11 +53,13 @@ export function StatsCard({ mealPref }: { mealPref: string }) {
           </a>
         </div>
       )}
-      <Stat label={mealPref}>
-        <div className="flex size-full items-center justify-center rounded-full border-[7px] border-lime/25">
-          <Leaf className="size-7 text-lime" strokeWidth={1.8} />
-        </div>
-      </Stat>
+      <Link to="/profile" aria-label="Your profile" className="transition active:scale-95">
+        <Stat label="Profile">
+          <div className="flex size-full items-center justify-center rounded-full border-[7px] border-lime/25">
+            <User className="size-7 text-lime" strokeWidth={1.8} />
+          </div>
+        </Stat>
+      </Link>
     </section>
   )
 }
