@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
+import { AssistantRuntimeProvider, ThreadPrimitive } from '@assistant-ui/react'
+import { useChatRuntime } from '@assistant-ui/ai-sdk'
 
 import { MessageBar } from '#/components/MessageBar'
+import { AgentMessages } from './AgentMessages'
 import { ChatMessage } from './ChatMessage'
 import { EnergySlider } from './EnergySlider'
 import { getRecipeSuggestions } from './recipes'
@@ -29,6 +32,8 @@ export function ChatFlow({
 }: {
   onMoodChange?: (mood: WattsMood) => void
 }) {
+  // Bianca's agent runtime; posts to /api/chat (the default). Don't change that here.
+  const runtime = useChatRuntime()
   const [messages, setMessages] = useState<Message[]>([ENERGY_QUESTION])
   const [step, setStep] = useState<Step>('energy')
   const energyRef = useRef(5)
@@ -113,57 +118,42 @@ export function ChatFlow({
     showRecipes()
   }
 
+  // Typed messages and "Cook this" go to Bianca's streaming agent.
   function handleCook(recipe: Recipe) {
-    post({ id: newId(), from: 'user', kind: 'text', text: `Let’s cook ${recipe.title}` })
-    // Placeholder until the agent can walk through the recipe.
-    wattsSays([
-      {
-        id: newId(),
-        from: 'watts',
-        kind: 'text',
-        text: 'Great pick. Step-by-step cooking is coming soon!',
-        highlight: 'Great',
-      },
-    ])
+    runtime.thread.append(`Let’s cook ${recipe.title}`)
   }
 
   function handleText(text: string) {
-    post({ id: newId(), from: 'user', kind: 'text', text })
-    // Placeholder until Bianca's agent is wired in.
-    wattsSays([
-      {
-        id: newId(),
-        from: 'watts',
-        kind: 'text',
-        text: 'I’m still learning to chat. Ask me again soon!',
-        highlight: 'soon',
-      },
-    ])
+    runtime.thread.append(text)
   }
 
   return (
-    <div className="flex h-full flex-col justify-end gap-3 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-      <div className="flex max-h-[70%] flex-col gap-2 overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent,black_2rem)] pt-8">
-        {messages.map((m) => (
-          <ChatMessage key={m.id} message={m} onCook={handleCook} />
-        ))}
+    <AssistantRuntimeProvider runtime={runtime}>
+      <ThreadPrimitive.Root className="flex h-full flex-col justify-end gap-3 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <ThreadPrimitive.Viewport className="flex max-h-[70%] flex-col gap-2 overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent,black_2rem)] pt-8">
+          {messages.map((m) => (
+            <ChatMessage key={m.id} message={m} onCook={handleCook} />
+          ))}
 
-        {step === 'energy' && <EnergySlider onSubmit={handleEnergy} />}
+          {step === 'energy' && <EnergySlider onSubmit={handleEnergy} />}
 
-        {step === 'fridge' && (
-          <button
-            type="button"
-            onClick={skipFridge}
-            className="self-start rounded-full border border-white/20 px-4 py-1.5 text-xs text-white/70"
-          >
-            Skip for now
-          </button>
-        )}
-        <div ref={endRef} />
-      </div>
+          {step === 'fridge' && (
+            <button
+              type="button"
+              onClick={skipFridge}
+              className="self-start rounded-full border border-white/20 px-4 py-1.5 text-xs text-white/70"
+            >
+              Skip for now
+            </button>
+          )}
 
-      <MessageBar onSend={handleText} onPhoto={handlePhoto} />
-    </div>
+          <AgentMessages />
+          <div ref={endRef} />
+        </ThreadPrimitive.Viewport>
+
+        <MessageBar onSend={handleText} onPhoto={handlePhoto} />
+      </ThreadPrimitive.Root>
+    </AssistantRuntimeProvider>
   )
 }
 
