@@ -1,28 +1,57 @@
+import { useEffect, useState } from 'react'
 import { Leaf } from 'lucide-react'
 
-type StatsCardProps = {
-  /** Whoop recovery, 0–100. */
-  recovery: number
-  /** Whoop strain, 0–21. */
-  strain: number
-  mealPref: string
-}
+import { getRecoverySummary } from '#/server/recovery'
+import type { RecoverySummary } from '#/server/recovery'
 
-export function StatsCard({ recovery, strain, mealPref }: StatsCardProps) {
+const EMPTY: RecoverySummary = { connected: true, recoveryScore: null, dayStrain: null }
+
+export function StatsCard({ mealPref }: { mealPref: string }) {
+  // null while loading; shows "–" in the rings until Whoop answers.
+  const [summary, setSummary] = useState<RecoverySummary | null>(null)
+
+  useEffect(() => {
+    let live = true
+    getRecoverySummary()
+      .then((s) => live && setSummary(s))
+      .catch((err) => {
+        console.error('getRecoverySummary failed', err)
+        if (live) setSummary(EMPTY)
+      })
+    return () => {
+      live = false
+    }
+  }, [])
+
+  const { connected, recoveryScore, dayStrain } = summary ?? EMPTY
+
   return (
     <section className="flex items-start justify-around rounded-3xl border border-white/10 bg-card/80 p-4 shadow-lg shadow-black/20 backdrop-blur-xl">
-      <Ring
-        label="Recovery"
-        value={`${Math.round(recovery)}%`}
-        fraction={recovery / 100}
-        color="var(--color-recovery)"
-      />
-      <Ring
-        label="Strain"
-        value={strain.toFixed(1)}
-        fraction={strain / 21}
-        color="var(--color-strain)"
-      />
+      {connected ? (
+        <>
+          <Ring
+            label="Recovery"
+            value={recoveryScore === null ? '–' : `${Math.round(recoveryScore)}%`}
+            fraction={(recoveryScore ?? 0) / 100}
+            color="var(--color-recovery)"
+          />
+          <Ring
+            label="Strain"
+            value={dayStrain === null ? '–' : dayStrain.toFixed(1)}
+            fraction={(dayStrain ?? 0) / 21}
+            color="var(--color-strain)"
+          />
+        </>
+      ) : (
+        <div className="flex h-20 flex-1 items-center justify-center pr-3">
+          <a
+            href="/api/whoop/connect"
+            className="flex h-12 w-full items-center justify-center rounded-full bg-lime text-base font-semibold text-teal-world transition active:scale-[0.98]"
+          >
+            Connect Whoop
+          </a>
+        </div>
+      )}
       <Stat label={mealPref}>
         <div className="flex size-full items-center justify-center rounded-full border-[7px] border-lime/25">
           <Leaf className="size-7 text-lime" strokeWidth={1.8} />
