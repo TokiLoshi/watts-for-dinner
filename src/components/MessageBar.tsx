@@ -50,7 +50,7 @@ export function MessageBar({
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder={placeholder}
-          className="min-w-0 flex-1 bg-transparent text-base text-teal-world placeholder:text-teal-world/50 focus:outline-none"
+          className="min-w-0 flex-1 bg-transparent text-base text-teal-world placeholder:text-teal-world/50 outline-none!"
         />
         <button
           type="submit"
