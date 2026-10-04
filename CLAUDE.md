@@ -36,6 +36,8 @@ Open source (MIT) personal chef + coach agent. Hackathon project by Bianca and M
      lastNightDinner: string;
    };
    ```
+3. Stats card: `await getRecoverySummary()` from `src/server/recovery.ts` (no args) returns
+   `{ connected: boolean; recoveryScore: number | null; dayStrain: number | null }`. Never throws.
 
 ## Rules
 - Every table has a `user_id` column. Until auth lands, use `DEMO_USER_ID` from `src/db/demo-user.ts`.
