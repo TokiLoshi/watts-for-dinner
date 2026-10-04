@@ -1,5 +1,7 @@
 import { useAuiState } from '@assistant-ui/react'
 
+import { recipeCardsFor } from './recipeResults'
+
 export const SHOW_MORE_MESSAGE = 'None of those feel right. Show me 3 different recipes.'
 const CHIPS = ['Surprise me', 'Something light', 'Comfort food', 'High protein']
 
@@ -25,10 +27,14 @@ export function ShowMoreButton({ onSend }: { onSend: (text: string) => void }) {
   )
 }
 
-/** Quick replies, shown only once Watts's reply has finished. */
+/** Quick replies, shown only once Watts's reply has finished, and only until recipe cards appear. */
 export function QuickReplyChips({ onSend }: { onSend: (text: string) => void }) {
-  const isRunning = useAuiState((s) => s.thread.isRunning)
-  if (isRunning) return null
+  const hidden = useAuiState(
+    (s) =>
+      s.thread.isRunning ||
+      s.thread.messages.some((m) => m.role === 'assistant' && recipeCardsFor(m).length > 0),
+  )
+  if (hidden) return null
   return (
     <div className="flex flex-wrap gap-2">
       {CHIPS.map((chip) => (

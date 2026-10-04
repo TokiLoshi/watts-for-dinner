@@ -1,14 +1,14 @@
-import { Leaf } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { Menu } from 'lucide-react'
 
 type StatsCardProps = {
   /** Whoop recovery, 0–100. */
   recovery: number
   /** Whoop strain, 0–21. */
   strain: number
-  mealPref: string
 }
 
-export function StatsCard({ recovery, strain, mealPref }: StatsCardProps) {
+export function StatsCard({ recovery, strain }: StatsCardProps) {
   return (
     <section className="flex items-start justify-around rounded-3xl border border-white/10 bg-card/80 p-4 shadow-lg shadow-black/20 backdrop-blur-xl">
       <Ring
@@ -23,11 +23,13 @@ export function StatsCard({ recovery, strain, mealPref }: StatsCardProps) {
         fraction={strain / 21}
         color="var(--color-strain)"
       />
-      <Stat label={mealPref}>
-        <div className="flex size-full items-center justify-center rounded-full border-[7px] border-lime/25">
-          <Leaf className="size-7 text-lime" strokeWidth={1.8} />
-        </div>
-      </Stat>
+      <Link to="/onboarding" aria-label="Edit your preferences" className="transition active:scale-95">
+        <Stat label="Preferences">
+          <div className="flex size-full items-center justify-center rounded-full border-[7px] border-lime/25">
+            <Menu className="size-7 text-lime" strokeWidth={1.8} />
+          </div>
+        </Stat>
+      </Link>
     </section>
   )
 }
