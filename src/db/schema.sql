@@ -51,4 +51,7 @@ CREATE TABLE IF NOT EXISTS whoop_connections (
 );
 
 -- Recipe image URL (Spoonacular's terms allow storing id, title and image URL only).
-ALTER TABLE meals ADD COLUMN IF NOT EXISTS image_url text
+ALTER TABLE meals ADD COLUMN IF NOT EXISTS image_url text;
+
+-- When Watts asked "keeper or not?" about this meal (asked at most once).
+ALTER TABLE meals ADD COLUMN IF NOT EXISTS rating_prompted_at timestamptz;
