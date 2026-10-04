@@ -49,3 +49,6 @@ CREATE TABLE IF NOT EXISTS whoop_connections (
   scope text NOT NULL,
   updated_at timestamptz NOT NULL DEFAULT now()
 );
+
+-- Recipe image URL (Spoonacular's terms allow storing id, title and image URL only).
+ALTER TABLE meals ADD COLUMN IF NOT EXISTS image_url text
