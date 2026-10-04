@@ -1,0 +1,251 @@
+{
+  "results": [
+    {
+      "id": 900001,
+      "image": "https://img.example.com/recipes/900001-556x370.jpg",
+      "imageType": "jpg",
+      "title": "Fixture Lemon Chickpea Orzo",
+      "readyInMinutes": 20,
+      "servings": 2,
+      "sourceUrl": "https://recipes.example.com/900001",
+      "vegetarian": true,
+      "vegan": false,
+      "glutenFree": false,
+      "dairyFree": true,
+      "veryHealthy": false,
+      "cheap": false,
+      "veryPopular": false,
+      "sustainable": false,
+      "lowFodmap": false,
+      "weightWatcherSmartPoints": 9,
+      "gaps": "no",
+      "preparationMinutes": 7,
+      "cookingMinutes": 13,
+      "aggregateLikes": 42,
+      "healthScore": 61,
+      "creditsText": "Example Kitchen",
+      "license": null,
+      "sourceName": "Example Kitchen",
+      "pricePerServing": 187.5,
+      "nutrition": {
+        "nutrients": [
+          {
+            "name": "Calories",
+            "amount": 540,
+            "unit": "kcal",
+            "percentOfDailyNeeds": 27
+          },
+          {
+            "name": "Fat",
+            "amount": 14,
+            "unit": "g",
+            "percentOfDailyNeeds": 21.5
+          },
+          {
+            "name": "Carbohydrates",
+            "amount": 82,
+            "unit": "g",
+            "percentOfDailyNeeds": 126.2
+          },
+          {
+            "name": "Protein",
+            "amount": 22,
+            "unit": "g",
+            "percentOfDailyNeeds": 33.8
+          }
+        ],
+        "properties": [],
+        "flavonoids": [],
+        "ingredients": [],
+        "caloricBreakdown": {
+          "percentProtein": 16,
+          "percentFat": 23,
+          "percentCarbs": 61
+        },
+        "weightPerServing": {
+          "amount": 420,
+          "unit": "g"
+        }
+      },
+      "summary": "A made-up fixture recipe: Fixture Lemon Chickpea Orzo.",
+      "cuisines": [],
+      "dishTypes": [
+        "main course"
+      ],
+      "diets": [
+        "vegetarian",
+        "dairy free"
+      ],
+      "occasions": [],
+      "language": "en",
+      "spoonacularScore": 72.5,
+      "spoonacularSourceUrl": "https://recipes.example.com/spoon/900001"
+    },
+    {
+      "id": 900002,
+      "image": "https://img.example.com/recipes/900002-556x370.jpg",
+      "imageType": "jpg",
+      "title": "Fixture Smoky Black Bean Tacos",
+      "readyInMinutes": 25,
+      "servings": 2,
+      "sourceUrl": "https://recipes.example.com/900002",
+      "vegetarian": true,
+      "vegan": true,
+      "glutenFree": false,
+      "dairyFree": true,
+      "veryHealthy": false,
+      "cheap": false,
+      "veryPopular": false,
+      "sustainable": false,
+      "lowFodmap": false,
+      "weightWatcherSmartPoints": 9,
+      "gaps": "no",
+      "preparationMinutes": 8,
+      "cookingMinutes": 17,
+      "aggregateLikes": 42,
+      "healthScore": 61,
+      "creditsText": "Example Kitchen",
+      "license": null,
+      "sourceName": "Example Kitchen",
+      "pricePerServing": 187.5,
+      "nutrition": {
+        "nutrients": [
+          {
+            "name": "Calories",
+            "amount": 610,
+            "unit": "kcal",
+            "percentOfDailyNeeds": 30.5
+          },
+          {
+            "name": "Fat",
+            "amount": 18,
+            "unit": "g",
+            "percentOfDailyNeeds": 27.7
+          },
+          {
+            "name": "Carbohydrates",
+            "amount": 88,
+            "unit": "g",
+            "percentOfDailyNeeds": 135.4
+          },
+          {
+            "name": "Protein",
+            "amount": 24,
+            "unit": "g",
+            "percentOfDailyNeeds": 36.9
+          }
+        ],
+        "properties": [],
+        "flavonoids": [],
+        "ingredients": [],
+        "caloricBreakdown": {
+          "percentProtein": 16,
+          "percentFat": 27,
+          "percentCarbs": 58
+        },
+        "weightPerServing": {
+          "amount": 420,
+          "unit": "g"
+        }
+      },
+      "summary": "A made-up fixture recipe: Fixture Smoky Black Bean Tacos.",
+      "cuisines": [],
+      "dishTypes": [
+        "main course"
+      ],
+      "diets": [
+        "vegetarian",
+        "vegan",
+        "dairy free"
+      ],
+      "occasions": [],
+      "language": "en",
+      "spoonacularScore": 72.5,
+      "spoonacularSourceUrl": "https://recipes.example.com/spoon/900002"
+    },
+    {
+      "id": 900003,
+      "image": "https://img.example.com/recipes/900003-556x370.jpg",
+      "imageType": "jpg",
+      "title": "Fixture Spinach Halloumi Traybake",
+      "readyInMinutes": 35,
+      "servings": 2,
+      "sourceUrl": "https://recipes.example.com/900003",
+      "vegetarian": true,
+      "vegan": false,
+      "glutenFree": true,
+      "dairyFree": false,
+      "veryHealthy": false,
+      "cheap": false,
+      "veryPopular": false,
+      "sustainable": false,
+      "lowFodmap": false,
+      "weightWatcherSmartPoints": 9,
+      "gaps": "no",
+      "preparationMinutes": 12,
+      "cookingMinutes": 23,
+      "aggregateLikes": 42,
+      "healthScore": 61,
+      "creditsText": "Example Kitchen",
+      "license": null,
+      "sourceName": "Example Kitchen",
+      "pricePerServing": 187.5,
+      "nutrition": {
+        "nutrients": [
+          {
+            "name": "Calories",
+            "amount": 690,
+            "unit": "kcal",
+            "percentOfDailyNeeds": 34.5
+          },
+          {
+            "name": "Fat",
+            "amount": 38,
+            "unit": "g",
+            "percentOfDailyNeeds": 58.5
+          },
+          {
+            "name": "Carbohydrates",
+            "amount": 44,
+            "unit": "g",
+            "percentOfDailyNeeds": 67.7
+          },
+          {
+            "name": "Protein",
+            "amount": 34,
+            "unit": "g",
+            "percentOfDailyNeeds": 52.3
+          }
+        ],
+        "properties": [],
+        "flavonoids": [],
+        "ingredients": [],
+        "caloricBreakdown": {
+          "percentProtein": 20,
+          "percentFat": 50,
+          "percentCarbs": 26
+        },
+        "weightPerServing": {
+          "amount": 420,
+          "unit": "g"
+        }
+      },
+      "summary": "A made-up fixture recipe: Fixture Spinach Halloumi Traybake.",
+      "cuisines": [],
+      "dishTypes": [
+        "main course"
+      ],
+      "diets": [
+        "vegetarian",
+        "gluten free"
+      ],
+      "occasions": [],
+      "language": "en",
+      "spoonacularScore": 72.5,
+      "spoonacularSourceUrl": "https://recipes.example.com/spoon/900003"
+    }
+  ],
+  "offset": 0,
+  "number": 3,
+  "totalResults": 3
+}
