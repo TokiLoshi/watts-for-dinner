@@ -44,3 +44,26 @@ export const saveProfile = createServerFn({ method: "POST" })
 		]);
 		return { ok: true as const };
 	});
+
+/** The user's saved profile, or null if onboarding hasn't saved one. Server-only. */
+export async function getProfileForUser(userId = DEMO_USER_ID): Promise<Profile | null> {
+	const rows = (await getSql()`
+		SELECT dietary_preferences, goal, goal_note, favourite_meals, last_night_dinner
+		FROM profiles WHERE user_id = ${userId}
+	`) as {
+		dietary_preferences: string[];
+		goal: Profile["goal"];
+		goal_note: string | null;
+		favourite_meals: string[];
+		last_night_dinner: string;
+	}[];
+	const r = rows[0];
+	if (!r) return null;
+	return {
+		dietaryPreferences: r.dietary_preferences,
+		goal: r.goal,
+		...(r.goal_note ? { goalNote: r.goal_note } : {}),
+		favouriteMeals: r.favourite_meals,
+		lastNightDinner: r.last_night_dinner,
+	};
+}
