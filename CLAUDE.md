@@ -17,7 +17,7 @@ Open source (MIT) personal chef + coach agent. Hackathon project by Bianca and M
 - `pnpm db:migrate` – apply `src/db/schema.sql` to `DATABASE_URL` (idempotent; no ORM)
 
 ## Folder ownership
-- Bianca: `src/agent`, `src/server`, `src/db`, `src/whoop` (standalone WHOOP toolkit: no app imports)
+- Bianca: `src/agent`, `src/server`, `src/db`, `src/whoop` (standalone WHOOP toolkit: no app imports), `src/recipes`
 - Michael: `src/components`, `src/routes/onboarding`, `src/world`
 - Touching the other person's folders? Ask first.
 
@@ -43,7 +43,8 @@ Open source (MIT) personal chef + coach agent. Hackathon project by Bianca and M
 - The browser never calls outside services. All API calls (Claude, Spoonacular,
   Whoop, Exa, Neon) go through server functions. Keys stay server-side; only
   `VITE_`-prefixed vars reach the client, so never put a secret in one.
-- Env vars: see `.env.example`. Local values go in `.env.local`.
+- Env vars: see `.env.example`. Local values go in `.env.local`. Spoonacular is 50 points/day:
+  use `FAKE_SPOONACULAR=1` in dev. Only store recipe id, title, image URL (their terms).
 
 ## Git
 - `main` is the base. All changes go through branches + PRs; no direct commits to main.
