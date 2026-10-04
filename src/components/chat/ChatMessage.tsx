@@ -31,7 +31,7 @@ export function ChatMessage({
 
   if (message.from === 'user') {
     return (
-      <p className="ml-auto max-w-[80%] rounded-2xl rounded-br-md bg-cream px-4 py-2 text-sm text-teal-world">
+      <p className="ml-auto max-w-[90%] rounded-2xl rounded-br-md bg-cream px-4 py-2 text-base text-teal-world">
         {message.text}
       </p>
     )
@@ -39,9 +39,9 @@ export function ChatMessage({
 
   const shape = message.centered
     ? 'w-full rounded-2xl text-center'
-    : 'max-w-[90%] rounded-2xl rounded-bl-md'
+    : 'w-full rounded-2xl rounded-bl-md'
   return (
-    <p className={`${shape} border border-white/10 bg-card/80 px-4 py-2.5 font-serif text-xl leading-snug text-white backdrop-blur-xl`}>
+    <p className={`${shape} border border-white/10 bg-card/80 px-4 py-3 font-serif text-2xl leading-snug text-white backdrop-blur-xl`}>
       <Highlighted text={message.text} word={message.highlight} />
     </p>
   )

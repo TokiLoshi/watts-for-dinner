@@ -22,7 +22,7 @@ const FRIDGE_QUESTION: Message = {
   centered: true,
 }
 
-const FRIDGE_PROMPT = 'Here’s my fridge. What ingredients can you see? List them.'
+const FRIDGE_PROMPT = 'Here’s my fridge. List the ingredients you can see. Don’t ask about my energy, I’ll tell you next.'
 
 let nextId = 0
 const newId = () => `m${++nextId}`
@@ -89,7 +89,9 @@ export function ChatFlow({
         onReplyDone={() => setStep((s) => (s === 'reading' ? 'energy' : s))}
       />
       <ThreadPrimitive.Root className="flex h-full flex-col justify-end gap-3 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-        <ThreadPrimitive.Viewport className="flex max-h-[70%] flex-col gap-2 overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent,black_2rem)] pt-8">
+        <ThreadPrimitive.Viewport className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent,black_2rem)] pt-8">
+          {/* Pushes a short chat to the bottom; shrinks away once it scrolls. */}
+          <div className="flex-1" />
           {messages.map((m) => (
             <ChatMessage key={m.id} message={m} onCook={handleCook} />
           ))}
@@ -103,7 +105,7 @@ export function ChatFlow({
             <button
               type="button"
               onClick={skipFridge}
-              className="self-start rounded-full border border-white/20 px-4 py-1.5 text-xs text-white/70"
+              className="self-start rounded-full border border-white/20 px-5 py-2.5 text-sm text-white/80"
             >
               Skip for now
             </button>

@@ -9,19 +9,19 @@ export function AgentMessages() {
         <MessagePrimitive.Root
           className={
             message.role === 'user'
-              ? 'ml-auto flex max-w-[80%] flex-col items-end gap-2 text-sm text-teal-world'
-              : 'max-w-[90%] rounded-2xl rounded-bl-md border border-white/10 bg-card/80 px-4 py-2.5 text-sm text-white backdrop-blur-xl'
+              ? 'ml-auto flex max-w-[90%] flex-col items-end gap-2 text-base text-teal-world'
+              : 'w-full rounded-2xl rounded-bl-md border border-white/10 bg-card/80 px-4 py-3 text-base leading-relaxed text-white backdrop-blur-xl'
           }
         >
+          {/* Photos arrive as attachments, not message parts. */}
+          {message.attachments?.flatMap((a) =>
+            a.content.map((c, i) =>
+              c.type === 'image' ? <FridgePhoto key={`${a.id}-${i}`} src={c.image} /> : null,
+            ),
+          )}
           <MessagePrimitive.Parts
             components={{
-              Image: ({ image }) => (
-                <img
-                  src={image}
-                  alt="Your fridge"
-                  className="max-h-48 rounded-2xl border-2 border-lime object-cover"
-                />
-              ),
+              Image: ({ image }) => <FridgePhoto src={image} />,
               Text: ({ text }) =>
                 message.role === 'user' ? (
                   <p className="rounded-2xl rounded-br-md bg-cream px-4 py-2">{text}</p>
@@ -33,6 +33,12 @@ export function AgentMessages() {
         </MessagePrimitive.Root>
       )}
     </ThreadPrimitive.Messages>
+  )
+}
+
+function FridgePhoto({ src }: { src: string }) {
+  return (
+    <img src={src} alt="Your fridge" className="max-h-56 rounded-2xl border-2 border-lime object-cover" />
   )
 }
 

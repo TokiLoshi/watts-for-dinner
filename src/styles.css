@@ -38,3 +38,12 @@ body {
 .animate-bar-glow {
   animation: bar-glow 3.5s ease-in-out infinite;
 }
+
+/* Soft lime focus ring everywhere, instead of the browser's blue outline. */
+:focus-visible {
+  outline: 3px solid rgb(181 210 119 / 0.55);
+  outline-offset: 2px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
