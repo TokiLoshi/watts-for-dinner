@@ -1,11 +1,11 @@
 {
-  "id": 900001,
-  "image": "https://img.example.com/recipes/900001-556x370.jpg",
+  "id": -1,
+  "image": "https://img.example.com/recipes/fixture-1-556x370.jpg",
   "imageType": "jpg",
-  "title": "Fixture Lemon Chickpea Orzo",
+  "title": "Lemon Chickpea Orzo",
   "readyInMinutes": 20,
   "servings": 2,
-  "sourceUrl": "https://recipes.example.com/900001",
+  "sourceUrl": "https://recipes.example.com/fixture-1",
   "vegetarian": true,
   "vegan": false,
   "glutenFree": false,
@@ -206,7 +206,7 @@
       }
     }
   ],
-  "summary": "A made-up fixture recipe: Fixture Lemon Chickpea Orzo.",
+  "summary": "A made-up fixture recipe: Lemon Chickpea Orzo.",
   "cuisines": [],
   "dishTypes": [
     "main course"
@@ -238,5 +238,5 @@
   ],
   "language": "en",
   "spoonacularScore": 72.5,
-  "spoonacularSourceUrl": "https://recipes.example.com/spoon/900001"
+  "spoonacularSourceUrl": "https://recipes.example.com/spoon/fixture-1"
 }

@@ -1,10 +1,13 @@
 import { getSql } from "../db/client";
 import { DEMO_USER_ID } from "../db/demo-user";
+import { isFixtureRecipeId } from "../recipes/spoonacular";
 
 // Spoonacular's terms allow storing only recipe id, title and image URL.
 export type LoggedMeal = { recipeId: number; title: string; imageUrl?: string | null };
 
+/** Saves the chosen meal. Fixture recipes (quota fallback / FAKE_SPOONACULAR) are skipped: returns null. */
 export async function logMeal(meal: LoggedMeal, userId = DEMO_USER_ID) {
+	if (isFixtureRecipeId(meal.recipeId)) return null;
 	const sql = getSql();
 	const [, rows] = await sql.transaction([
 		sql`INSERT INTO users (user_id) VALUES (${userId}) ON CONFLICT DO NOTHING`,

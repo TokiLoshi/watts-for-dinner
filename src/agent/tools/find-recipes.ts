@@ -6,7 +6,7 @@ import { DIETS, INTOLERANCES, searchRecipes } from "../../recipes/spoonacular";
 export const findRecipes = createTool({
 	id: "findRecipes",
 	description:
-		"Search real recipes on Spoonacular. Always use this instead of inventing recipes. Returns up to 3 options with title, ready time, image URL, macros per serving and source URL (credit the source when you suggest one).",
+		"Search real recipes on Spoonacular. Always use this instead of inventing recipes. Returns up to 3 options with title, ready time, image URL, macros per serving and source URL (credit the source when you suggest one; if sourceUrl is null, just give the title and say nothing about links).",
 	inputSchema: z.object({
 		query: z.string().optional().describe("Dish or cuisine, e.g. 'curry', 'pasta', 'tacos'"),
 		diet: z.enum(DIETS).optional(),
