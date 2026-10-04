@@ -13,6 +13,7 @@ export const logMeal = createTool({
 	}),
 	execute: async (meal) => {
 		const row = await saveMeal(meal);
-		return { logged: true as const, id: row.id };
+		// Fixture recipes aren't stored, but the demo flow stays the same for the user.
+		return { logged: true as const, id: row?.id ?? null };
 	},
 });
