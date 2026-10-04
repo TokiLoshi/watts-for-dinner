@@ -39,3 +39,13 @@ CREATE TABLE IF NOT EXISTS meal_ratings (
   rated_at timestamptz NOT NULL DEFAULT now(),
   UNIQUE (user_id, meal_id)
 );
+
+-- WHOOP OAuth tokens, one connection per user. Server-side only.
+CREATE TABLE IF NOT EXISTS whoop_connections (
+  user_id uuid PRIMARY KEY REFERENCES users (user_id) ON DELETE CASCADE,
+  access_token text NOT NULL,
+  refresh_token text,
+  expires_at timestamptz NOT NULL,
+  scope text NOT NULL,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
