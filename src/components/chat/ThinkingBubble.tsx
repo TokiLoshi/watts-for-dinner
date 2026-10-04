@@ -1,6 +1,7 @@
 import { useAuiState } from '@assistant-ui/react'
 
 import { FRIDGE_CAPTION } from './prompts'
+import { WattsAvatar } from './WattsAvatar'
 
 /** Tools worth naming; quiet lookups (profile, recovery, recent meals) keep the step's text. */
 const TOOL_LABELS: Record<string, string> = {
@@ -42,20 +43,20 @@ export function ThinkingBubble() {
   const label = thinkingLabel(isRunning, messages)
   if (!label) return null
   return (
-    <div
-      role="status"
-      className="flex max-w-[90%] items-center gap-3 self-start rounded-2xl rounded-bl-md border border-white/10 bg-card/80 px-4 py-3 backdrop-blur-xl"
-    >
-      <span className="flex gap-1" aria-hidden="true">
-        {[0, 1, 2].map((i) => (
-          <span
-            key={i}
-            className="animate-soft-bounce size-2 rounded-full bg-lime"
-            style={{ animationDelay: `${i * 160}ms` }}
-          />
-        ))}
-      </span>
-      <span className="font-serif text-base text-white/80 italic">{label}</span>
+    <div role="status" className="flex max-w-[90%] items-end gap-2 self-start">
+      <WattsAvatar thinking />
+      <div className="flex items-center gap-3 rounded-2xl rounded-bl-none border border-white/10 bg-card/80 px-4 py-3 backdrop-blur-xl">
+        <span className="flex gap-1" aria-hidden="true">
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className="animate-soft-bounce size-2 rounded-full bg-lime"
+              style={{ animationDelay: `${i * 160}ms` }}
+            />
+          ))}
+        </span>
+        <span className="font-serif text-base text-white/80 italic">{label}</span>
+      </div>
     </div>
   )
 }
