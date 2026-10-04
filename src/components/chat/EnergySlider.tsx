@@ -12,6 +12,9 @@ export function EnergySlider({ onSubmit }: { onSubmit: (energy: number) => void 
 
   return (
     <div className="rounded-3xl border border-white/10 bg-card/80 p-4 backdrop-blur-xl">
+      <h2 className="mb-2 text-center font-serif text-2xl leading-snug text-white">
+        How much <em className="text-lime">energy</em> do you have today?
+      </h2>
       <div className="flex items-baseline justify-center gap-1 font-serif">
         <span className="text-5xl text-lime">{energy}</span>
         <span className="text-xl text-white/50">/ 10</span>
@@ -29,14 +32,14 @@ export function EnergySlider({ onSubmit }: { onSubmit: (energy: number) => void 
         aria-label="Energy today, 1 to 10"
         className="mt-3 w-full accent-lime"
       />
-      <div className="flex justify-between text-xs text-white/50">
+      <div className="flex justify-between text-sm text-white/60">
         <span>Too tired to cook</span>
         <span>Cooking up a storm</span>
       </div>
       <button
         type="button"
         onClick={() => onSubmit(energy)}
-        className="mt-4 h-11 w-full rounded-full bg-lime font-medium text-teal-world transition active:scale-[0.98]"
+        className="mt-4 h-12 w-full rounded-full bg-lime text-base font-medium text-teal-world transition active:scale-[0.98]"
       >
         Lock it in
       </button>

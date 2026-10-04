@@ -1,4 +1,4 @@
-import { Clock, Zap } from 'lucide-react'
+import { ChefHat, Clock, Zap } from 'lucide-react'
 
 import type { Message, Recipe } from './types'
 
@@ -31,7 +31,7 @@ export function ChatMessage({
 
   if (message.from === 'user') {
     return (
-      <p className="ml-auto max-w-[80%] rounded-2xl rounded-br-md bg-cream px-4 py-2 text-sm text-teal-world">
+      <p className="ml-auto max-w-[90%] rounded-2xl rounded-br-md bg-cream px-4 py-2 text-base text-teal-world">
         {message.text}
       </p>
     )
@@ -39,9 +39,9 @@ export function ChatMessage({
 
   const shape = message.centered
     ? 'w-full rounded-2xl text-center'
-    : 'max-w-[90%] rounded-2xl rounded-bl-md'
+    : 'w-full rounded-2xl rounded-bl-md'
   return (
-    <p className={`${shape} border border-white/10 bg-card/80 px-4 py-2.5 font-serif text-xl leading-snug text-white backdrop-blur-xl`}>
+    <p className={`${shape} border border-white/10 bg-card/80 px-4 py-3 font-serif text-2xl leading-snug text-white backdrop-blur-xl`}>
       <Highlighted text={message.text} word={message.highlight} />
     </p>
   )
@@ -60,7 +60,7 @@ function Highlighted({ text, word }: { text: string; word?: string }) {
   )
 }
 
-function RecipeCard({
+export function RecipeCard({
   recipe,
   onCook,
 }: {
@@ -69,26 +69,50 @@ function RecipeCard({
 }) {
   return (
     <article className="flex items-center gap-3 rounded-2xl bg-cream p-2.5 text-teal-world shadow-lg shadow-black/20">
-      <img
-        src={recipe.image}
-        alt=""
-        className="size-20 shrink-0 rounded-xl bg-teal-world/10 object-cover"
-      />
+      {recipe.image ? (
+        <img
+          src={recipe.image}
+          alt=""
+          className="size-20 shrink-0 rounded-xl bg-teal-world/10 object-cover"
+        />
+      ) : (
+        <div className="flex size-20 shrink-0 items-center justify-center rounded-xl bg-teal-world/10">
+          <ChefHat className="size-8 text-teal-world/40" strokeWidth={1.5} />
+        </div>
+      )}
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <h3 className="font-serif text-base leading-tight">{recipe.title}</h3>
-        <div className="flex gap-3 text-xs text-teal-world/60">
+        <h3 className="font-serif text-lg leading-tight">{recipe.title}</h3>
+        <div className="flex gap-3 text-sm text-teal-world/60">
           <span className="flex items-center gap-1">
             <Clock className="size-3.5" /> {recipe.cookMinutes} min
           </span>
-          <span className="flex items-center gap-1">
-            <Zap className="size-3.5 text-strain" /> Effort {recipe.energy}/10
-          </span>
+          {recipe.energy != null && (
+            <span className="flex items-center gap-1">
+              <Zap className="size-3.5 text-strain" /> Effort {recipe.energy}/10
+            </span>
+          )}
         </div>
+        {!!recipe.usedIngredients?.length && (
+          <p className="text-xs text-teal-world/70">Uses: {recipe.usedIngredients.join(', ')}</p>
+        )}
+        {!!recipe.missingIngredients?.length && (
+          <p className="text-xs text-teal-world/70">Need: {recipe.missingIngredients.join(', ')}</p>
+        )}
+        {recipe.sourceUrl && (
+          <a
+            href={recipe.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="w-fit text-xs text-teal-world/60 underline underline-offset-2"
+          >
+            {recipe.sourceName || 'Source'}
+          </a>
+        )}
       </div>
       <button
         type="button"
         onClick={() => onCook(recipe)}
-        className="h-12 shrink-0 rounded-full bg-lime px-4 text-sm font-semibold text-teal-world transition active:scale-[0.97]"
+        className="h-12 shrink-0 rounded-full bg-lime px-4 text-base font-semibold text-teal-world transition active:scale-[0.97]"
       >
         Cook this
       </button>
