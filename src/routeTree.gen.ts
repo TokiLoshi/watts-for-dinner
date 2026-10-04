@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiWhoopCallbackRouteImport } from './routes/api/whoop/callback'
 import { Route as ApiWhoopConnectRouteImport } from './routes/api/whoop/connect'
@@ -37,6 +38,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnboardingIndexRoute = OnboardingIndexRouteImport.update({
+  id: '/onboarding/',
+  path: '/onboarding/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/sign-in': typeof SignInRoute
   '/api/chat': typeof ApiChatRoute
+  '/onboarding/': typeof OnboardingIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/whoop/callback': typeof ApiWhoopCallbackRoute
   '/api/whoop/connect': typeof ApiWhoopConnectRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/sign-in': typeof SignInRoute
   '/api/chat': typeof ApiChatRoute
+  '/onboarding': typeof OnboardingIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/whoop/callback': typeof ApiWhoopCallbackRoute
   '/api/whoop/connect': typeof ApiWhoopConnectRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/sign-in': typeof SignInRoute
   '/api/chat': typeof ApiChatRoute
+  '/onboarding/': typeof OnboardingIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/whoop/callback': typeof ApiWhoopCallbackRoute
   '/api/whoop/connect': typeof ApiWhoopConnectRoute
@@ -88,6 +97,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/sign-in'
     | '/api/chat'
+    | '/onboarding/'
     | '/api/auth/$'
     | '/api/whoop/callback'
     | '/api/whoop/connect'
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/sign-in'
     | '/api/chat'
+    | '/onboarding'
     | '/api/auth/$'
     | '/api/whoop/callback'
     | '/api/whoop/connect'
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/sign-in'
     | '/api/chat'
+    | '/onboarding/'
     | '/api/auth/$'
     | '/api/whoop/callback'
     | '/api/whoop/connect'
@@ -116,6 +128,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   SignInRoute: typeof SignInRoute
   ApiChatRoute: typeof ApiChatRoute
+  OnboardingIndexRoute: typeof OnboardingIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiWhoopCallbackRoute: typeof ApiWhoopCallbackRoute
   ApiWhoopConnectRoute: typeof ApiWhoopConnectRoute
@@ -151,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/onboarding/': {
+      id: '/onboarding/'
+      path: '/onboarding'
+      fullPath: '/onboarding/'
+      preLoaderRoute: typeof OnboardingIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -180,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   SignInRoute: SignInRoute,
   ApiChatRoute: ApiChatRoute,
+  OnboardingIndexRoute: OnboardingIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiWhoopCallbackRoute: ApiWhoopCallbackRoute,
   ApiWhoopConnectRoute: ApiWhoopConnectRoute,
