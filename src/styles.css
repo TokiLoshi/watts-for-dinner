@@ -1,1 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap");
 @import "tailwindcss";
+
+@theme {
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --color-teal-world: #1a2630;
+  --color-card: #2f3e48;
+  --color-lime: #b5d277;
+  --color-cream: #f3f5ee;
+  --color-recovery: #b5d277;
+  --color-strain: #e8a055;
+}
+
+/* Teal behind everything so no white shows past the app column. */
+html,
+body {
+  background-color: var(--color-teal-world);
+}
+
+/* Glowing pulse for the floating message bar. */
+@keyframes bar-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 18px 0 rgb(181 210 119 / 0.25);
+  }
+  50% {
+    box-shadow: 0 0 28px 4px rgb(181 210 119 / 0.45);
+  }
+}
+
+.animate-bar-glow {
+  animation: bar-glow 3.5s ease-in-out infinite;
+}
