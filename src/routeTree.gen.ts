@@ -17,6 +17,7 @@ import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiWhoopCallbackRouteImport } from './routes/api/whoop/callback'
 import { Route as ApiWhoopConnectRouteImport } from './routes/api/whoop/connect'
+import { Route as ApiWhoopDisconnectRouteImport } from './routes/api/whoop/disconnect'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -58,6 +59,11 @@ const ApiWhoopConnectRoute = ApiWhoopConnectRouteImport.update({
   path: '/api/whoop/connect',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWhoopDisconnectRoute = ApiWhoopDisconnectRouteImport.update({
+  id: '/api/whoop/disconnect',
+  path: '/api/whoop/disconnect',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/whoop/callback': typeof ApiWhoopCallbackRoute
   '/api/whoop/connect': typeof ApiWhoopConnectRoute
+  '/api/whoop/disconnect': typeof ApiWhoopDisconnectRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/whoop/callback': typeof ApiWhoopCallbackRoute
   '/api/whoop/connect': typeof ApiWhoopConnectRoute
+  '/api/whoop/disconnect': typeof ApiWhoopDisconnectRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/whoop/callback': typeof ApiWhoopCallbackRoute
   '/api/whoop/connect': typeof ApiWhoopConnectRoute
+  '/api/whoop/disconnect': typeof ApiWhoopDisconnectRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/whoop/callback'
     | '/api/whoop/connect'
+    | '/api/whoop/disconnect'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/whoop/callback'
     | '/api/whoop/connect'
+    | '/api/whoop/disconnect'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/whoop/callback'
     | '/api/whoop/connect'
+    | '/api/whoop/disconnect'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiWhoopCallbackRoute: typeof ApiWhoopCallbackRoute
   ApiWhoopConnectRoute: typeof ApiWhoopConnectRoute
+  ApiWhoopDisconnectRoute: typeof ApiWhoopDisconnectRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiWhoopConnectRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/whoop/disconnect': {
+      id: '/api/whoop/disconnect'
+      path: '/api/whoop/disconnect'
+      fullPath: '/api/whoop/disconnect'
+      preLoaderRoute: typeof ApiWhoopDisconnectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -204,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiWhoopCallbackRoute: ApiWhoopCallbackRoute,
   ApiWhoopConnectRoute: ApiWhoopConnectRoute,
+  ApiWhoopDisconnectRoute: ApiWhoopDisconnectRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

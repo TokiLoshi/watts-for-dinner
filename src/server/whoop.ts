@@ -142,3 +142,21 @@ export async function getWhoopClientForUser(userId: string) {
 		onTokens: (next) => saveTokens(userId, next),
 	});
 }
+
+/**
+ * Disconnects WHOOP for the user: revokes access with WHOOP, then deletes the stored
+ * tokens. Tokens are deleted even if the revoke fails (the privacy policy promises it).
+ */
+export async function disconnectWhoop(userId: string) {
+	const whoop = await getWhoopClientForUser(userId);
+	if (!whoop) return { ok: true as const, wasConnected: false, revoked: false };
+	let revoked = false;
+	try {
+		await whoop.revokeAccess();
+		revoked = true;
+	} catch (error) {
+		console.error("[whoop] revoke failed; deleting tokens anyway", error);
+	}
+	await getSql()`DELETE FROM whoop_connections WHERE user_id = ${userId}`;
+	return { ok: true as const, wasConnected: true, revoked };
+}
