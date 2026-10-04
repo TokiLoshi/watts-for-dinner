@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ApiWhoopCallbackRouteImport } from './routes/api/whoop/callback'
+import { Route as ApiWhoopConnectRouteImport } from './routes/api/whoop/connect'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +30,69 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWhoopCallbackRoute = ApiWhoopCallbackRouteImport.update({
+  id: '/api/whoop/callback',
+  path: '/api/whoop/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWhoopConnectRoute = ApiWhoopConnectRouteImport.update({
+  id: '/api/whoop/connect',
+  path: '/api/whoop/connect',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/privacy': typeof PrivacyRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/whoop/callback': typeof ApiWhoopCallbackRoute
+  '/api/whoop/connect': typeof ApiWhoopConnectRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/privacy': typeof PrivacyRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/whoop/callback': typeof ApiWhoopCallbackRoute
+  '/api/whoop/connect': typeof ApiWhoopConnectRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/privacy': typeof PrivacyRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/whoop/callback': typeof ApiWhoopCallbackRoute
+  '/api/whoop/connect': typeof ApiWhoopConnectRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/privacy' | '/api/chat'
+  fullPaths:
+    | '/'
+    | '/privacy'
+    | '/api/chat'
+    | '/api/whoop/callback'
+    | '/api/whoop/connect'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/privacy' | '/api/chat'
-  id: '__root__' | '/' | '/privacy' | '/api/chat'
+  to:
+    | '/'
+    | '/privacy'
+    | '/api/chat'
+    | '/api/whoop/callback'
+    | '/api/whoop/connect'
+  id:
+    | '__root__'
+    | '/'
+    | '/privacy'
+    | '/api/chat'
+    | '/api/whoop/callback'
+    | '/api/whoop/connect'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PrivacyRoute: typeof PrivacyRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiWhoopCallbackRoute: typeof ApiWhoopCallbackRoute
+  ApiWhoopConnectRoute: typeof ApiWhoopConnectRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +118,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/whoop/callback': {
+      id: '/api/whoop/callback'
+      path: '/api/whoop/callback'
+      fullPath: '/api/whoop/callback'
+      preLoaderRoute: typeof ApiWhoopCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/whoop/connect': {
+      id: '/api/whoop/connect'
+      path: '/api/whoop/connect'
+      fullPath: '/api/whoop/connect'
+      preLoaderRoute: typeof ApiWhoopConnectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +139,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PrivacyRoute: PrivacyRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiWhoopCallbackRoute: ApiWhoopCallbackRoute,
+  ApiWhoopConnectRoute: ApiWhoopConnectRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
