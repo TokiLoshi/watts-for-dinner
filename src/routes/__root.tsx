@@ -7,9 +7,12 @@ import appCss from '../styles.css?url'
 // Pages anyone can see. Everything else needs a signed-in user.
 const PUBLIC_PATHS = ['/sign-in', '/privacy']
 
+// Static file requests (favicon.ico, apple-touch-icon.png, /assets/...) never redirect to sign-in.
+const isStaticFile = (pathname: string) => pathname.startsWith('/assets/') || /\.[a-z0-9]+$/i.test(pathname)
+
 export const Route = createRootRoute({
   beforeLoad: async ({ location }) => {
-    if (PUBLIC_PATHS.includes(location.pathname)) return
+    if (PUBLIC_PATHS.includes(location.pathname) || isStaticFile(location.pathname)) return
     const user = await getSessionUser()
     if (!user) throw redirect({ to: '/sign-in' })
     // New users (no saved profile yet) go through onboarding first.
@@ -32,6 +35,7 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
+      { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
       {
         rel: 'stylesheet',
         href: appCss,
