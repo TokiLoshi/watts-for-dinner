@@ -1,0 +1,223 @@
+{
+  "id": -3,
+  "image": "https://img.example.com/recipes/fixture-3-556x370.jpg",
+  "imageType": "jpg",
+  "title": "Spinach Halloumi Traybake",
+  "readyInMinutes": 35,
+  "servings": 2,
+  "sourceUrl": "https://recipes.example.com/fixture-3",
+  "vegetarian": true,
+  "vegan": false,
+  "glutenFree": true,
+  "dairyFree": false,
+  "veryHealthy": false,
+  "cheap": false,
+  "veryPopular": false,
+  "sustainable": false,
+  "lowFodmap": false,
+  "weightWatcherSmartPoints": 9,
+  "gaps": "no",
+  "preparationMinutes": 12,
+  "cookingMinutes": 23,
+  "aggregateLikes": 42,
+  "healthScore": 61,
+  "creditsText": "Example Kitchen",
+  "license": null,
+  "sourceName": "Example Kitchen",
+  "pricePerServing": 187.5,
+  "extendedIngredients": [
+    {
+      "id": 21,
+      "aisle": "Cheese",
+      "image": "halloumi.jpg",
+      "consistency": "SOLID",
+      "name": "halloumi",
+      "nameClean": "halloumi",
+      "original": "225 g halloumi",
+      "originalName": "halloumi",
+      "amount": 225,
+      "unit": "g",
+      "meta": [
+        "sliced"
+      ],
+      "measures": {
+        "us": {
+          "amount": 225,
+          "unitShort": "g",
+          "unitLong": "g"
+        },
+        "metric": {
+          "amount": 225,
+          "unitShort": "g",
+          "unitLong": "g"
+        }
+      }
+    },
+    {
+      "id": 22,
+      "aisle": "Produce",
+      "image": "baby-spinach.jpg",
+      "consistency": "SOLID",
+      "name": "baby spinach",
+      "nameClean": "baby spinach",
+      "original": "2 cups baby spinach",
+      "originalName": "baby spinach",
+      "amount": 2,
+      "unit": "cups",
+      "meta": [],
+      "measures": {
+        "us": {
+          "amount": 2,
+          "unitShort": "cups",
+          "unitLong": "cups"
+        },
+        "metric": {
+          "amount": 60,
+          "unitShort": "g",
+          "unitLong": "g"
+        }
+      }
+    },
+    {
+      "id": 23,
+      "aisle": "Produce",
+      "image": "cherry-tomatoes.jpg",
+      "consistency": "SOLID",
+      "name": "cherry tomatoes",
+      "nameClean": "cherry tomatoes",
+      "original": "1 cup cherry tomatoes",
+      "originalName": "cherry tomatoes",
+      "amount": 1,
+      "unit": "cup",
+      "meta": [],
+      "measures": {
+        "us": {
+          "amount": 1,
+          "unitShort": "cup",
+          "unitLong": "cup"
+        },
+        "metric": {
+          "amount": 150,
+          "unitShort": "g",
+          "unitLong": "g"
+        }
+      }
+    },
+    {
+      "id": 24,
+      "aisle": "Produce",
+      "image": "red-bell-pepper.jpg",
+      "consistency": "SOLID",
+      "name": "red bell pepper",
+      "nameClean": "red bell pepper",
+      "original": "1 red bell pepper",
+      "originalName": "red bell pepper",
+      "amount": 1,
+      "unit": "",
+      "meta": [],
+      "measures": {
+        "us": {
+          "amount": 1,
+          "unitShort": "",
+          "unitLong": ""
+        },
+        "metric": {
+          "amount": 1,
+          "unitShort": "",
+          "unitLong": ""
+        }
+      }
+    },
+    {
+      "id": 25,
+      "aisle": "Canned and Jarred",
+      "image": "chickpeas.jpg",
+      "consistency": "SOLID",
+      "name": "chickpeas",
+      "nameClean": "chickpeas",
+      "original": "1 can chickpeas",
+      "originalName": "chickpeas",
+      "amount": 1,
+      "unit": "can",
+      "meta": [
+        "drained"
+      ],
+      "measures": {
+        "us": {
+          "amount": 1,
+          "unitShort": "can",
+          "unitLong": "can"
+        },
+        "metric": {
+          "amount": 400,
+          "unitShort": "g",
+          "unitLong": "g"
+        }
+      }
+    },
+    {
+      "id": 26,
+      "aisle": "Oil, Vinegar, Salad Dressing",
+      "image": "olive-oil.jpg",
+      "consistency": "SOLID",
+      "name": "olive oil",
+      "nameClean": "olive oil",
+      "original": "2 tbsp olive oil",
+      "originalName": "olive oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "meta": [],
+      "measures": {
+        "us": {
+          "amount": 2,
+          "unitShort": "tbsp",
+          "unitLong": "tbsp"
+        },
+        "metric": {
+          "amount": 2,
+          "unitShort": "Tbsps",
+          "unitLong": "Tbsps"
+        }
+      }
+    }
+  ],
+  "summary": "A made-up fixture recipe: Spinach Halloumi Traybake.",
+  "cuisines": [],
+  "dishTypes": [
+    "main course"
+  ],
+  "diets": [
+    "vegetarian",
+    "gluten free"
+  ],
+  "occasions": [],
+  "instructions": "Roast the pepper, tomatoes and chickpeas in oil. Add the halloumi and roast until golden. Stir through the spinach to wilt.",
+  "analyzedInstructions": [
+    {
+      "name": "",
+      "steps": [
+        {
+          "number": 1,
+          "step": "Roast the pepper, tomatoes and chickpeas in oil.",
+          "ingredients": [],
+          "equipment": []
+        },
+        {
+          "number": 2,
+          "step": "Add the halloumi and roast until golden.",
+          "ingredients": [],
+          "equipment": []
+        },
+        {
+          "number": 3,
+          "step": "Stir through the spinach to wilt.",
+          "ingredients": [],
+          "equipment": []
+        }
+      ]
+    }
+  ],
+  "language": "en",
+  "spoonacularScore": 72.5,
+  "spoonacularSourceUrl": "https://recipes.example.com/spoon/fixture-3"
+}

@@ -1,13 +1,13 @@
 {
   "results": [
     {
-      "id": 900001,
-      "image": "https://img.example.com/recipes/900001-556x370.jpg",
+      "id": -1,
+      "image": "https://img.example.com/recipes/fixture-1-556x370.jpg",
       "imageType": "jpg",
-      "title": "Fixture Lemon Chickpea Orzo",
+      "title": "Lemon Chickpea Orzo",
       "readyInMinutes": 20,
       "servings": 2,
-      "sourceUrl": "https://recipes.example.com/900001",
+      "sourceUrl": "https://recipes.example.com/fixture-1",
       "vegetarian": true,
       "vegan": false,
       "glutenFree": false,
@@ -67,7 +67,7 @@
           "unit": "g"
         }
       },
-      "summary": "A made-up fixture recipe: Fixture Lemon Chickpea Orzo.",
+      "summary": "A made-up fixture recipe: Lemon Chickpea Orzo.",
       "cuisines": [],
       "dishTypes": [
         "main course"
@@ -79,16 +79,16 @@
       "occasions": [],
       "language": "en",
       "spoonacularScore": 72.5,
-      "spoonacularSourceUrl": "https://recipes.example.com/spoon/900001"
+      "spoonacularSourceUrl": "https://recipes.example.com/spoon/fixture-1"
     },
     {
-      "id": 900002,
-      "image": "https://img.example.com/recipes/900002-556x370.jpg",
+      "id": -2,
+      "image": "https://img.example.com/recipes/fixture-2-556x370.jpg",
       "imageType": "jpg",
-      "title": "Fixture Smoky Black Bean Tacos",
+      "title": "Smoky Black Bean Tacos",
       "readyInMinutes": 25,
       "servings": 2,
-      "sourceUrl": "https://recipes.example.com/900002",
+      "sourceUrl": "https://recipes.example.com/fixture-2",
       "vegetarian": true,
       "vegan": true,
       "glutenFree": false,
@@ -148,7 +148,7 @@
           "unit": "g"
         }
       },
-      "summary": "A made-up fixture recipe: Fixture Smoky Black Bean Tacos.",
+      "summary": "A made-up fixture recipe: Smoky Black Bean Tacos.",
       "cuisines": [],
       "dishTypes": [
         "main course"
@@ -161,16 +161,16 @@
       "occasions": [],
       "language": "en",
       "spoonacularScore": 72.5,
-      "spoonacularSourceUrl": "https://recipes.example.com/spoon/900002"
+      "spoonacularSourceUrl": "https://recipes.example.com/spoon/fixture-2"
     },
     {
-      "id": 900003,
-      "image": "https://img.example.com/recipes/900003-556x370.jpg",
+      "id": -3,
+      "image": "https://img.example.com/recipes/fixture-3-556x370.jpg",
       "imageType": "jpg",
-      "title": "Fixture Spinach Halloumi Traybake",
+      "title": "Spinach Halloumi Traybake",
       "readyInMinutes": 35,
       "servings": 2,
-      "sourceUrl": "https://recipes.example.com/900003",
+      "sourceUrl": "https://recipes.example.com/fixture-3",
       "vegetarian": true,
       "vegan": false,
       "glutenFree": true,
@@ -230,7 +230,7 @@
           "unit": "g"
         }
       },
-      "summary": "A made-up fixture recipe: Fixture Spinach Halloumi Traybake.",
+      "summary": "A made-up fixture recipe: Spinach Halloumi Traybake.",
       "cuisines": [],
       "dishTypes": [
         "main course"
@@ -242,7 +242,7 @@
       "occasions": [],
       "language": "en",
       "spoonacularScore": 72.5,
-      "spoonacularSourceUrl": "https://recipes.example.com/spoon/900003"
+      "spoonacularSourceUrl": "https://recipes.example.com/spoon/fixture-3"
     }
   ],
   "offset": 0,

@@ -49,7 +49,8 @@ export type RecipeOption = {
 	title: string;
 	readyInMinutes: number;
 	image: string | null;
-	sourceUrl: string;
+	/** null for fixture recipes: there's no real source to link. */
+	sourceUrl: string | null;
 	sourceName: string | null;
 	macros: { calories: number | null; proteinG: number | null; carbsG: number | null; fatG: number | null };
 };
@@ -73,10 +74,20 @@ const isFake = () => process.env.FAKE_SPOONACULAR === "1";
 
 class QuotaError extends Error {}
 
+/** Fixture recipes use negative ids; real Spoonacular ids are always positive. */
+export const isFixtureRecipeId = (id: number) => id < 0;
+
 const loadSearchFixture = async () =>
 	(await import("./fixtures/complex-search.json", { with: { type: "json" } })).default as SearchResponse;
-const loadInformationFixture = async () =>
-	(await import("./fixtures/recipe-information.json", { with: { type: "json" } })).default as InformationResponse;
+const loadInformationFixture = async (recipeId: number) => {
+	const fixture =
+		recipeId === -2
+			? await import("./fixtures/recipe-information-tacos.json", { with: { type: "json" } })
+			: recipeId === -3
+				? await import("./fixtures/recipe-information-traybake.json", { with: { type: "json" } })
+				: await import("./fixtures/recipe-information.json", { with: { type: "json" } });
+	return fixture.default as InformationResponse;
+};
 
 /** Runs the real call; on a quota/payment error, logs a warning and uses the fixture instead. */
 async function withQuotaFallback<T>(real: () => Promise<T>, fixture: () => Promise<T>): Promise<T> {
@@ -127,28 +138,34 @@ export async function searchRecipes(search: RecipeSearch): Promise<RecipeOption[
 		if (search.includeIngredients?.length) params.includeIngredients = search.includeIngredients.join(",");
 		data = await withQuotaFallback(() => get<SearchResponse>("/recipes/complexSearch", params), fromFixture);
 	}
-	return data.results.map((r) => ({
-		id: r.id,
-		title: r.title,
-		readyInMinutes: r.readyInMinutes,
-		image: r.image ?? null,
-		sourceUrl: r.sourceUrl,
-		sourceName: r.sourceName ?? null,
-		macros: {
-			calories: macro(r.nutrition?.nutrients, "Calories"),
-			proteinG: macro(r.nutrition?.nutrients, "Protein"),
-			carbsG: macro(r.nutrition?.nutrients, "Carbohydrates"),
-			fatG: macro(r.nutrition?.nutrients, "Fat"),
-		},
-	}));
+	return data.results.map((r) => {
+		const fixture = isFixtureRecipeId(r.id);
+		return {
+			id: r.id,
+			title: r.title,
+			readyInMinutes: r.readyInMinutes,
+			// Fixture images and sources are placeholders: don't show or link them.
+			image: fixture ? null : (r.image ?? null),
+			sourceUrl: fixture ? null : r.sourceUrl,
+			sourceName: fixture ? null : (r.sourceName ?? null),
+			macros: {
+				calories: macro(r.nutrition?.nutrients, "Calories"),
+				proteinG: macro(r.nutrition?.nutrients, "Protein"),
+				carbsG: macro(r.nutrition?.nutrients, "Carbohydrates"),
+				fatG: macro(r.nutrition?.nutrients, "Fat"),
+			},
+		};
+	});
 }
 
 export async function getRecipeIngredients(recipeId: number): Promise<Ingredient[]> {
-	const data = isFake()
-		? await loadInformationFixture()
-		: await withQuotaFallback(
-				() => get<InformationResponse>(`/recipes/${recipeId}/information`, { includeNutrition: "false" }),
-				loadInformationFixture,
-			);
+	// Fixture recipes (e.g. served during a quota fallback) never hit the real API.
+	const data =
+		isFake() || isFixtureRecipeId(recipeId)
+			? await loadInformationFixture(recipeId)
+			: await withQuotaFallback(
+					() => get<InformationResponse>(`/recipes/${recipeId}/information`, { includeNutrition: "false" }),
+					() => loadInformationFixture(recipeId),
+				);
 	return data.extendedIngredients.map((i) => ({ name: i.nameClean ?? i.name, amount: i.amount, unit: i.unit }));
 }
