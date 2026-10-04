@@ -69,3 +69,9 @@ export async function getProfileForUser(userId: string): Promise<Profile | null>
 		lastNightDinner: r.last_night_dinner,
 	};
 }
+
+/** Whether the user has finished onboarding (saved a profile). Server-only. */
+export async function hasProfile(userId: string): Promise<boolean> {
+	const rows = (await getSql()`SELECT 1 FROM profiles WHERE user_id = ${userId} LIMIT 1`) as unknown[];
+	return rows.length > 0;
+}

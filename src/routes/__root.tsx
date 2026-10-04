@@ -11,6 +11,9 @@ export const Route = createRootRoute({
     if (PUBLIC_PATHS.includes(location.pathname)) return
     const user = await getSessionUser()
     if (!user) throw redirect({ to: '/sign-in' })
+    // New users (no saved profile yet) go through onboarding first.
+    const onOnboarding = location.pathname === '/onboarding' || location.pathname.startsWith('/onboarding/')
+    if (!user.hasProfile && !onOnboarding) throw redirect({ to: '/onboarding' })
     return { user }
   },
   head: () => ({
