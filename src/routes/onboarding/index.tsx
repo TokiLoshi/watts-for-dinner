@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { Plus, X } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 
 import { Chip } from '#/components/onboarding/Chip'
-import { saveProfile } from '#/components/onboarding/saveProfile'
-import type { Profile } from '#/components/onboarding/saveProfile'
+import { saveProfile } from '#/server/profile'
+import type { Profile } from '#/server/profile'
 
 export const Route = createFileRoute('/onboarding/')({ component: Onboarding })
 
@@ -28,20 +28,31 @@ const GOALS: { value: Profile['goal']; label: string }[] = [
   { value: 'other', label: 'Other' },
 ]
 
+const MAX_MEALS = 5
+const STEPS = 4
+
 const input =
-  'h-12 w-full rounded-2xl border border-white/15 bg-card/80 px-4 text-sm text-white placeholder:text-white/40 focus:border-lime focus:outline-none'
+  'h-14 w-full rounded-2xl border border-white/15 bg-card/80 px-4 text-base text-white placeholder:text-white/40 focus:border-lime focus:outline-none'
 
 function Onboarding() {
   const navigate = useNavigate()
+  const [step, setStep] = useState(0)
   const [diets, setDiets] = useState<string[]>([])
+  const [otherDiet, setOtherDiet] = useState<string | null>(null)
   const [goal, setGoal] = useState<Profile['goal'] | null>(null)
   const [goalNote, setGoalNote] = useState('')
-  const [meals, setMeals] = useState<string[]>([])
-  const [mealDraft, setMealDraft] = useState('')
+  const [meals, setMeals] = useState<string[]>(Array(MAX_MEALS).fill(''))
   const [lastNight, setLastNight] = useState('')
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const canSubmit = goal !== null && lastNight.trim() !== '' && !saving
+  const filledMeals = meals.map((m) => m.trim()).filter(Boolean)
+  const canContinue = [
+    true,
+    goal !== null,
+    filledMeals.length > 0,
+    lastNight.trim() !== '' && !saving,
+  ][step]
 
   function toggleDiet(diet: string) {
     setDiets((prev) =>
@@ -49,149 +60,205 @@ function Onboarding() {
     )
   }
 
-  function addMeal() {
-    const meal = mealDraft.trim()
-    if (meal && !meals.includes(meal)) setMeals([...meals, meal])
-    setMealDraft('')
+  async function finish() {
+    if (goal === null) return
+    const other = otherDiet?.trim()
+    const note = goalNote.trim()
+    const profile: Profile = {
+      dietaryPreferences: other ? [...diets, other] : diets,
+      goal,
+      ...(goal === 'other' && note ? { goalNote: note } : {}),
+      favouriteMeals: [...new Set(filledMeals)],
+      lastNightDinner: lastNight.trim(),
+    }
+    setSaving(true)
+    setError(null)
+    try {
+      await saveProfile({ data: profile })
+      navigate({ to: '/' })
+    } catch (err) {
+      console.error('saveProfile failed', err)
+      setError('Watts couldn’t save that. Try again?')
+      setSaving(false)
+    }
   }
 
-  async function submit(e: React.FormEvent) {
+  function next(e: React.FormEvent) {
     e.preventDefault()
-    if (!canSubmit || goal === null) return
-    setSaving(true)
-    // A meal typed but not added still counts.
-    const draft = mealDraft.trim()
-    await saveProfile({
-      dietaryPreferences: diets,
-      goal,
-      goalNote: goal === 'other' && goalNote.trim() ? goalNote.trim() : undefined,
-      favouriteMeals: draft && !meals.includes(draft) ? [...meals, draft] : meals,
-      lastNightDinner: lastNight.trim(),
-    })
-    navigate({ to: '/' })
+    if (!canContinue) return
+    if (step < STEPS - 1) setStep(step + 1)
+    else void finish()
   }
+
+  const isLast = step === STEPS - 1
+  const buttonLabel = isLast
+    ? saving
+      ? 'Saving…'
+      : 'Let’s eat'
+    : step === 0 && diets.length === 0 && !otherDiet?.trim()
+      ? 'No preferences'
+      : 'Next'
 
   return (
-    <main className="mx-auto min-h-dvh max-w-md bg-teal-world px-4 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] font-sans text-white">
-      <h1 className="font-serif text-3xl leading-tight">
-        Tell Watts about your <em className="text-lime">taste</em>
-      </h1>
-      <p className="mt-2 text-sm text-white/60">
-        A few quick questions so dinner fits you.
-      </p>
-
-      <form onSubmit={submit} className="mt-8 flex flex-col gap-8">
-        <Section title="Any dietary preferences?" hint="Pick as many as you like.">
-          <div className="flex flex-wrap gap-2">
-            {DIETS.map((diet) => (
-              <Chip
-                key={diet}
-                selected={diets.includes(diet)}
-                onClick={() => toggleDiet(diet)}
-              >
-                {diet}
-              </Chip>
-            ))}
-          </div>
-        </Section>
-
-        <Section title="What’s your goal?">
-          <div className="flex flex-wrap gap-2">
-            {GOALS.map((g) => (
-              <Chip
-                key={g.value}
-                selected={goal === g.value}
-                onClick={() => setGoal(g.value)}
-              >
-                {g.label}
-              </Chip>
-            ))}
-          </div>
-          {goal === 'other' && (
-            <input
-              value={goalNote}
-              onChange={(e) => setGoalNote(e.target.value)}
-              placeholder="Tell Watts a bit more"
-              className={`${input} mt-3`}
-            />
-          )}
-        </Section>
-
-        <Section title="Favourite meals" hint="Add a few you’d happily eat again.">
-          <div className="flex gap-2">
-            <input
-              value={mealDraft}
-              onChange={(e) => setMealDraft(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                  addMeal()
-                }
-              }}
-              placeholder="e.g. Thai green curry"
-              className={input}
-            />
-            <button
-              type="button"
-              onClick={addMeal}
-              aria-label="Add meal"
-              disabled={!mealDraft.trim()}
-              className="flex size-12 shrink-0 items-center justify-center rounded-full bg-lime text-teal-world transition disabled:opacity-40"
-            >
-              <Plus className="size-5" />
-            </button>
-          </div>
-          {meals.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {meals.map((meal) => (
-                <Chip
-                  key={meal}
-                  selected
-                  onClick={() => setMeals(meals.filter((m) => m !== meal))}
-                >
-                  {meal}
-                  <X className="size-3.5" aria-label={`Remove ${meal}`} />
-                </Chip>
-              ))}
-            </div>
-          )}
-        </Section>
-
-        <Section title="What did you have for dinner last night?">
-          <input
-            value={lastNight}
-            onChange={(e) => setLastNight(e.target.value)}
-            placeholder="e.g. Leftover pizza"
-            className={input}
+    <main className="mx-auto flex min-h-dvh max-w-md flex-col bg-teal-world px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] font-sans text-white">
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={() => setStep(step - 1)}
+          aria-label="Back"
+          className={`-ml-2 flex size-10 items-center justify-center rounded-full text-white/70 transition active:scale-95 ${step === 0 ? 'invisible' : ''}`}
+        >
+          <ChevronLeft className="size-6" />
+        </button>
+        <div
+          role="progressbar"
+          aria-valuemin={1}
+          aria-valuemax={STEPS}
+          aria-valuenow={step + 1}
+          aria-label={`Question ${step + 1} of ${STEPS}`}
+          className="h-1 flex-1 overflow-hidden rounded-full bg-white/10"
+        >
+          <div
+            className="h-full rounded-full bg-lime transition-[width] duration-300"
+            style={{ width: `${((step + 1) / STEPS) * 100}%` }}
           />
-        </Section>
+        </div>
+        <div className="size-10" />
+      </div>
 
+      <form onSubmit={next} className="flex flex-1 flex-col">
+        <div key={step} className="mt-10 flex-1">
+          {step === 0 && (
+            <>
+              <Question hint="Pick as many as you like.">
+                Any dietary <em>preferences</em>?
+              </Question>
+              <div className="flex flex-wrap gap-2.5">
+                {DIETS.map((diet) => (
+                  <Chip
+                    key={diet}
+                    selected={diets.includes(diet)}
+                    onClick={() => toggleDiet(diet)}
+                  >
+                    {diet}
+                  </Chip>
+                ))}
+                <Chip
+                  selected={otherDiet !== null}
+                  onClick={() => setOtherDiet(otherDiet === null ? '' : null)}
+                >
+                  Other
+                </Chip>
+              </div>
+              {otherDiet !== null && (
+                <input
+                  autoFocus
+                  value={otherDiet}
+                  onChange={(e) => setOtherDiet(e.target.value)}
+                  placeholder="e.g. No mushrooms"
+                  aria-label="Other dietary preference"
+                  className={`${input} mt-4`}
+                />
+              )}
+            </>
+          )}
+
+          {step === 1 && (
+            <>
+              <Question>
+                What’s your <em>goal</em>?
+              </Question>
+              <div className="flex flex-wrap gap-2.5">
+                {GOALS.map((g) => (
+                  <Chip
+                    key={g.value}
+                    selected={goal === g.value}
+                    onClick={() => setGoal(g.value)}
+                  >
+                    {g.label}
+                  </Chip>
+                ))}
+              </div>
+              {goal === 'other' && (
+                <input
+                  autoFocus
+                  value={goalNote}
+                  onChange={(e) => setGoalNote(e.target.value)}
+                  placeholder="Tell Watts a bit more"
+                  aria-label="Goal note"
+                  className={`${input} mt-4`}
+                />
+              )}
+            </>
+          )}
+
+          {step === 2 && (
+            <>
+              <Question hint="Up to five you’d happily eat again.">
+                Your top five <em>favourite</em> meals?
+              </Question>
+              <div className="flex flex-col gap-2.5">
+                {meals.map((meal, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <span className="w-4 text-right font-serif text-lg text-lime">
+                      {i + 1}
+                    </span>
+                    <input
+                      autoFocus={i === 0}
+                      value={meal}
+                      onChange={(e) =>
+                        setMeals(meals.map((m, j) => (j === i ? e.target.value : m)))
+                      }
+                      placeholder={i === 0 ? 'e.g. Thai green curry' : ''}
+                      aria-label={`Favourite meal ${i + 1}`}
+                      className={input}
+                    />
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {step === 3 && (
+            <>
+              <Question>
+                What did you have for <em>dinner</em> last night?
+              </Question>
+              <input
+                autoFocus
+                value={lastNight}
+                onChange={(e) => setLastNight(e.target.value)}
+                placeholder="e.g. Leftover pizza"
+                aria-label="Last night’s dinner"
+                className={input}
+              />
+            </>
+          )}
+        </div>
+
+        {error && (
+          <p role="alert" className="mb-3 text-center text-sm text-strain">
+            {error}
+          </p>
+        )}
         <button
           type="submit"
-          disabled={!canSubmit}
+          disabled={!canContinue}
           className="h-14 w-full rounded-full bg-lime text-base font-semibold text-teal-world transition active:scale-[0.98] disabled:opacity-40"
         >
-          {saving ? 'Saving…' : 'Let’s eat'}
+          {buttonLabel}
         </button>
       </form>
     </main>
   )
 }
 
-function Section({
-  title,
-  hint,
-  children,
-}: {
-  title: string
-  hint?: string
-  children: React.ReactNode
-}) {
+/** Fraunces question; wrap the one highlight word in <em>. */
+function Question({ hint, children }: { hint?: string; children: React.ReactNode }) {
   return (
-    <section>
-      <h2 className="font-serif text-xl">{title}</h2>
-      {hint && <p className="mt-1 text-xs text-white/50">{hint}</p>}
-      <div className="mt-3">{children}</div>
-    </section>
+    <div className="mb-6">
+      <h1 className="font-serif text-3xl leading-tight [&_em]:text-lime">{children}</h1>
+      {hint && <p className="mt-2 text-sm text-white/60">{hint}</p>}
+    </div>
   )
 }
