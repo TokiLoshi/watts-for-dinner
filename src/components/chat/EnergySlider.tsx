@@ -1,5 +1,12 @@
 import { useState } from 'react'
 
+function energyMood(energy: number) {
+  if (energy <= 3) return 'Running on fumes'
+  if (energy <= 6) return 'Up for something simple'
+  if (energy <= 8) return 'Feeling good'
+  return 'Cooking up a storm'
+}
+
 export function EnergySlider({ onSubmit }: { onSubmit: (energy: number) => void }) {
   const [energy, setEnergy] = useState(5)
 
@@ -9,6 +16,9 @@ export function EnergySlider({ onSubmit }: { onSubmit: (energy: number) => void 
         <span className="text-5xl text-lime">{energy}</span>
         <span className="text-xl text-white/50">/ 10</span>
       </div>
+      <p className="mt-1 text-center font-serif text-lg text-lime/90 italic" aria-live="polite">
+        {energyMood(energy)}
+      </p>
       <input
         type="range"
         min={1}
@@ -20,8 +30,8 @@ export function EnergySlider({ onSubmit }: { onSubmit: (energy: number) => void 
         className="mt-3 w-full accent-lime"
       />
       <div className="flex justify-between text-xs text-white/50">
-        <span>Running on empty</span>
-        <span>Full power</span>
+        <span>Too tired to cook</span>
+        <span>Cooking up a storm</span>
       </div>
       <button
         type="button"
