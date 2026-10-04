@@ -14,15 +14,19 @@ Open source (MIT) personal chef + coach agent. Hackathon project by Bianca and M
 - `pnpm dev` – dev server
 - `pnpm build` – production build
 - `pnpm start` – run the production build (`.output/server/index.mjs`; honors `PORT`, Docker/Fly use 8080)
+- `pnpm db:migrate` – apply `src/db/schema.sql` to `DATABASE_URL` (idempotent; no ORM)
 
 ## Folder ownership
-- Bianca: `src/agent`, `src/server`, `src/db`
+- Bianca: `src/agent`, `src/server`, `src/db`, `src/whoop` (standalone WHOOP toolkit: no app imports)
 - Michael: `src/components`, `src/routes/onboarding`, `src/world`
 - Touching the other person's folders? Ask first.
 
 ## Contracts
 1. The Watts 3D component takes `mood: "idle" | "thinking" | "talking"`.
-2. Onboarding calls the server function `saveProfile(profile: Profile)`:
+2. Onboarding calls the server function `saveProfile` from `src/server/profile.ts`
+   (exports `saveProfile` and `Profile`). Call it as `saveProfile({ data: profile })`, e.g.
+   `await saveProfile({ data: { dietaryPreferences: ["vegetarian"], goal: "maintain", favouriteMeals: ["dal"], lastNightDinner: "toast" } })`.
+   Extra keys or an unknown `goal` are rejected. `Profile`:
    ```ts
    type Profile = {
      dietaryPreferences: string[];
@@ -34,7 +38,8 @@ Open source (MIT) personal chef + coach agent. Hackathon project by Bianca and M
    ```
 
 ## Rules
-- Every table has a `user_id` column. Until auth lands, use one hardcoded user.
+- Every table has a `user_id` column. Until auth lands, use `DEMO_USER_ID` from `src/db/demo-user.ts`.
+- DB access: `getSql()` from `src/db/client.ts` (Neon serverless driver), server code only.
 - The browser never calls outside services. All API calls (Claude, Spoonacular,
   Whoop, Exa, Neon) go through server functions. Keys stay server-side; only
   `VITE_`-prefixed vars reach the client, so never put a secret in one.
