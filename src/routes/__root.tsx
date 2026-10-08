@@ -1,63 +1,99 @@
-import { HeadContent, Scripts, createRootRoute, redirect } from '@tanstack/react-router'
+import {
+	HeadContent,
+	Scripts,
+	createRootRoute,
+	redirect,
+} from "@tanstack/react-router";
 
-import { getSessionUser } from '../server/session'
-import { SparklesBackground } from './-sparkles-bg'
-import appCss from '../styles.css?url'
+import { getSessionUser } from "../server/session";
+import { SparklesBackground } from "./-sparkles-bg";
+import appCss from "../styles.css?url";
+import posthog from "posthog-js";
+import { useEffect } from "react";
 
 // Pages anyone can see. Everything else needs a signed-in user.
-const PUBLIC_PATHS = ['/sign-in', '/privacy']
+const PUBLIC_PATHS = ["/sign-in", "/privacy"];
+
+const Analytics = () => {
+	useEffect(() => {
+		if (!import.meta.env.PROD) return;
+		const key = import.meta.env.VITE_POSTHOG_KEY;
+		if (!key) {
+			console.warn("Posthog key not configured");
+			return;
+		}
+		posthog.init(key, {
+			api_host: import.meta.env.VITE_POSTHOG_HOST,
+			persistence: "memory",
+			autocapture: false,
+			disable_session_recording: true,
+			defaults: "2026-05-30",
+		});
+	}, []);
+	return null;
+};
 
 // Static file requests (favicon.ico, apple-touch-icon.png, /assets/...) never redirect to sign-in.
-const isStaticFile = (pathname: string) => pathname.startsWith('/assets/') || /\.[a-z0-9]+$/i.test(pathname)
+const isStaticFile = (pathname: string) =>
+	pathname.startsWith("/assets/") || /\.[a-z0-9]+$/i.test(pathname);
 
 export const Route = createRootRoute({
-  beforeLoad: async ({ location }) => {
-    if (PUBLIC_PATHS.includes(location.pathname) || isStaticFile(location.pathname)) return
-    const user = await getSessionUser()
-    if (!user) throw redirect({ to: '/sign-in' })
-    // New users (no saved profile yet) go through onboarding first.
-    const onOnboarding = location.pathname === '/onboarding' || location.pathname.startsWith('/onboarding/')
-    if (!user.hasProfile && !onOnboarding) throw redirect({ to: '/onboarding' })
-    return { user }
-  },
-  head: () => ({
-    meta: [
-      {
-        charSet: 'utf-8',
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      {
-        title: 'Watts for Dinner',
-      },
-    ],
-    links: [
-      { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
-      { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
-      {
-        rel: 'stylesheet',
-        href: appCss,
-      },
-    ],
-  }),
-  shellComponent: RootDocument,
-})
+	beforeLoad: async ({ location }) => {
+		if (
+			PUBLIC_PATHS.includes(location.pathname) ||
+			isStaticFile(location.pathname)
+		)
+			return;
+		const user = await getSessionUser();
+		if (!user) throw redirect({ to: "/sign-in" });
+		// New users (no saved profile yet) go through onboarding first.
+		const onOnboarding =
+			location.pathname === "/onboarding" ||
+			location.pathname.startsWith("/onboarding/");
+		if (!user.hasProfile && !onOnboarding)
+			throw redirect({ to: "/onboarding" });
+		return { user };
+	},
+	head: () => ({
+		meta: [
+			{
+				charSet: "utf-8",
+			},
+			{
+				name: "viewport",
+				content: "width=device-width, initial-scale=1",
+			},
+			{
+				title: "Watts for Dinner",
+			},
+		],
+		links: [
+			{ rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+			{ rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+			{
+				rel: "stylesheet",
+				href: appCss,
+			},
+		],
+	}),
+	shellComponent: RootDocument,
+});
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <SparklesBackground />
-        {/* Content stacks above the sparkles canvas (z-0). */}
-        <div className="relative z-10">{children}</div>
+	return (
+		<html lang='en'>
+			<head>
+				<HeadContent />
+			</head>
 
-        <Scripts />
-      </body>
-    </html>
-  )
+			<body>
+				<SparklesBackground />
+				<Analytics />
+				{/* Content stacks above the sparkles canvas (z-0). */}
+				<div className='relative z-10'>{children}</div>
+
+				<Scripts />
+			</body>
+		</html>
+	);
 }
