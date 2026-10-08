@@ -10,7 +10,7 @@ primary_region = 'sjc'
   dockerfile = 'Dockerfile'
 
 [build.args]
-  VITE_POSTHOG_PROJECT_TOKEN="phc_CywFDxUNDhcq4V7VFH2dBNYP7awosbXZUUcjU2ZBnKi6"
+  VITE_POSTHOG_KEY="phc_CywFDxUNDhcq4V7VFH2dBNYP7awosbXZUUcjU2ZBnKi6"
   VITE_POSTHOG_HOST="https://us.i.posthog.com"
 
 [http_service]
