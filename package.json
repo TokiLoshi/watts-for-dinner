@@ -2,6 +2,7 @@
   "name": "watts-for-dinner",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@12.9.1",
   "imports": {
     "#/*": "./src/*"
   },
@@ -29,7 +30,7 @@
     "lucide-react": "^1.51.0",
     "nitro": "3.0.260903-beta",
     "pg": "^8.23.1",
-    "posthog-js": "^1.438.2",
+    "posthog-js": "1.438.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "three": "^0.186.1",
@@ -47,12 +48,6 @@
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.2",
     "vite": "^8.0.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "lightningcss"
-    ]
   },
   "engines": {
     "node": ">=22"

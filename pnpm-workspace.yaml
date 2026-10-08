@@ -1,3 +1,7 @@
 allowBuilds:
   esbuild: true
   lightningcss: true
+  core-js: false
+
+overrides:
+  "@posthog/types": "1.415.1"
